@@ -1,70 +1,33 @@
-# ===== Dependencies =====
-node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# ===== Testing =====
-/coverage
-
-# ===== Next.js =====
-/.next/
-/out/
-/build
-
-# ===== Production =====
-/build
-
-# ===== Misc =====
+# OS files
 .DS_Store
-*.pem
+Thumbs.db
 
-# ===== Debug logs =====
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# IDE
+.vscode/
+.idea/
 
-# ===== Environment / secrets =====
+# Environment
 .env
 .env.local
-.env.*.local
-!.env.example
 
-# ===== Vercel =====
-.vercel
+# Docker data (if any volumes are mounted locally)
+docker/data/
 
-# ===== TypeScript =====
-*.tsbuildinfo
-next-env.d.ts
+# Logs
+*.log
 
-# ===== Sandbox / local-only =====
-local-*
-.claude
-.z-ai-config
+# System files
 .zscripts/
-tests/
 scripts/
 tool-results/
 examples/
-mini-services/
+tests/
 skills/
 download/
-prompt
-
-# ===== Logs =====
-*.log
-dev.log
-dev.out.log
-server.log
-
-# ===== Database files =====
-db/
-prisma/*.db
-prisma/*.db-journal
-*.db
-*.db-journal
+upload/
+.claude
+.dbclient
+.continue
+.cursor
+.next/
+node_modules/

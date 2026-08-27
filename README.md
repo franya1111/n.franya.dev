@@ -1,14 +1,12 @@
-# krasnobaeva — photo & video
+# krasnobaeva — photo & video 📷
 
-Сайт фотографа Тетяни Краснобаєвої. Зібрано на **Next.js 16** (App Router, TypeScript, Tailwind CSS 4, shadcn/ui).
+Сайт фотографа Тетяни Краснобаєвої. **PHP + Nginx** (без Node.js, без БД — контент у PHP-файлах).
 
 ---
 
-## 🚀 Запуск на твоєму сервері (Linux Mint + Nginx Proxy Manager)
+## 🚀 Швидкий запуск (3 кроки)
 
-У тебе вже працює схема: Cloudflare → NPM (порт 80) → контейнери по іменах у мережі `my-test_default`. Тому все зводиться до **3 кроків без жодної зміни портів**.
-
-### Крок 1. Клонувати репозиторій у папку піддомену
+### Крок 1. Клонувати у свою папку сайтів
 
 ```bash
 cd ~/my-lamp-project/src
@@ -22,163 +20,114 @@ cd n.franya.dev
 docker compose up -d --build
 ```
 
-Через ~30 секунд контейнер `krasnobaeva-web` підніметься і буде доступний у мережі NPM. Перевір:
+Через ~10 секунд контейнер `krasnobaeva-web` підніметься.
 
-```bash
-docker compose ps          # статус
-docker compose logs -f     # логи (Ctrl+C щоб вийти)
-```
+### Крок 3. Додати Proxy Host у NPM
 
-### Крок 3. Додати Proxy Host у Nginx Proxy Manager
-
-1. Відкрий адмінку NPM: `http://твій-сервер:81`
-2. **Hosts** → **Proxy Hosts** → **Add Proxy Host**
-3. Заповни:
+1. Адмінка NPM: `http://твій-сервер:81`
+2. **Hosts → Proxy Hosts → Add Proxy Host**
+3. Заповнити:
    - **Domain Names:** `n.franya.dev`
    - **Scheme:** `http`
-   - **Forward Hostname / IP:** `krasnobaeva-web`
-   - **Forward Port:** `3000`
+   - **Forward Hostname:** `krasnobaeva-web`
+   - **Forward Port:** `80`
    - **Block Common Exploits:** ✓
    - **Websockets Support:** ✓
-4. Перейди на вкладку **SSL**:
-   - **SSL Certificate:** `Request a new SSL Certificate`
-   - **Force SSL:** ✓
-   - **Email:** твій email для Let's Encrypt
-5. Натисни **Save**
+4. Вкладка **SSL** → `Request a new SSL Certificate` + `Force SSL`
+5. **Save**
 
-Готово! Через 10-30 секунд сайт буде живий:
-```
-https://n.franya.dev
-```
-
-> Якщо у тебе вже є wildcard-сертифікат `*.franya.dev` — обери його замість "Request a new SSL Certificate".
+Готово! Через 10-30 секунд: `https://n.franya.dev` ✅
 
 ---
 
-## 🔧 Корисні команди
-
-```bash
-# Логи в реальному часі
-docker compose logs -f
-
-# Статус контейнера
-docker compose ps
-
-# Перезапуск
-docker compose restart
-
-# Зупинити і видалити контейнер (дані в БД НЕ зникнуть — вони в volume)
-docker compose down
-
-# Оновити сайт після git pull або зміни коду
-git pull
-docker compose up -d --build
-
-# Повністю стерти все, включно з базою (УВАГА: видалить усі дані)
-docker compose down -v
-```
-
----
-
-## 🔄 Як оновлювати сайт надалі
+## 🔄 Як оновлювати сайт
 
 ```bash
 cd ~/my-lamp-project/src/n.franya.dev
 git pull
+# Перезапуск не потрібний — PHP читає файли в реальному часі
+```
+
+Якщо змінив `Dockerfile.php` або `nginx.conf`:
+
+```bash
 docker compose up -d --build
 ```
 
-Через ~30 секунд нова версія буде жива на `n.franya.dev`. Proxy Host у NPM перепідключати не треба — він прив'язаний до імені контейнера.
+---
+
+## 🛠 Корисні команди
+
+```bash
+docker compose ps          # статус
+docker compose logs -f     # логи (Ctrl+C — вихід)
+docker compose restart     # перезапуск
+docker compose down        # зупинити й видалити контейнер
+```
 
 ---
 
 ## 🌐 Як влаштована мережа
 
 ```
-                ┌──────────────────────────────────┐
-                │  Твій сервер (Linux Mint)       │
-                │                                  │
-Internet ───────┼──► :80 NPM (my-test-app-1)       │
-                │        │                         │
-                │        ├─► krasnobaeva-web:3000  │  ← цей проект
-                │        ├─► school-php:9000       │  ← sanya.franya.dev
-                │        ├─► my-lamp-project-web   │  ← my-lamp-project
-                │        └─► casino...             │  ← casino.franya.dev
-                │                                  │
-                └──────────────────────────────────┘
+                ┌──────────────────────────────────────────┐
+                │  Твій сервер (Linux Mint)               │
+                │                                          │
+Internet ───────┼──► :80 NPM (my-test-app-1)               │
+                │        │                                 │
+                │        ├─► krasnobaeva-web:80  ← ЦЕЙ    │
+                │        ├─► school-php:9000              │  sanya.franya.dev
+                │        ├─► my-lamp-project-web           │  my-lamp-project
+                │        └─► casino...                     │  casino.franya.dev
+                │                                          │
+                └──────────────────────────────────────────┘
 ```
 
-Всі контейнери підключені до Docker-мережі `my-test_default` (її створив NPM при установці). NPM за запитом `n.franya.dev` перенаправляє трафік на контейнер `krasnobaeva-web` порт `3000`.
+Всі контейнери підключені до Docker-мережі `my-test_default` (її створив NPM при установці). NPM за запитом `n.franya.dev` перенаправляє трафік на контейнер `krasnobaeva-web` порт `80`.
 
 ---
 
-## 🛠 Запуск без Docker (для локальної розробки)
+## 📦 Структура
 
-```bash
-# Потрібен Node.js 20+ і Bun
-bun install
-cp .env.example .env
-bun run dev          # http://localhost:3000
+```
+n.franya.dev/
+├── index.php              ← Головна сторінка (hero, about, services, reviews, booking, faq, contacts)
+├── category.php           ← Сторінка категорії з цінами (?id=individual / wedding / love-story / birthday / pregnancy / family)
+├── includes/
+│   ├── data.php           ← Усі дані (категорії, пакети цін, відгуки, FAQ)
+│   ├── header.php         ← Шапка + навігація + mobile menu
+│   └── footer.php         ← Футер
+├── css/style.css          ← Дизайн-система (золото + тёмный, Forum + Nunito Sans)
+├── js/main.js             ← Theme toggle, mobile menu, accordion, marquee, form → Telegram
+├── img/                   ← Усі зображення
+├── docker/
+│   ├── Dockerfile.php     ← PHP 8.2 FPM Alpine
+│   └── nginx.conf         ← Конфіг Nginx
+└── docker-compose.yml     ← nginx:alpine + php-fpm + my-test_default network
 ```
 
 ---
-
-## 📦 Структура проекту
-
-```
-├── src/
-│   ├── app/                     # Next.js App Router
-│   │   ├── layout.tsx           # Шрифти Forum + Nunito Sans
-│   │   ├── page.tsx             # Головна сторінка
-│   │   ├── globals.css          # Дизайн-система (золото + тёмный)
-│   │   └── api/
-│   ├── components/
-│   │   ├── ui/                  # shadcn/ui компоненти
-│   │   └── site/                # Секції сайту
-│   │       ├── header.tsx
-│   │       ├── hero.tsx
-│   │       ├── about.tsx
-│   │       ├── services.tsx     # 6 квадратних карток категорій
-│   │       ├── reviews.tsx      # Автопрокрутка відгуків
-│   │       ├── booking-form.tsx # Анкета бронювання → Telegram
-│   │       ├── faq.tsx
-│   │       ├── contacts.tsx
-│   │       ├── footer.tsx
-│   │       ├── category-detail-view.tsx  # Сторінка категорії з цінами
-│   │       └── loader.tsx
-│   ├── lib/
-│   │   ├── site-data.ts         # Усі тексти, ціни, відгуки, FAQ
-│   │   ├── db.ts                # Prisma-клієнт
-│   │   └── utils.ts
-│   └── hooks/
-├── public/images/               # Усі зображення
-├── prisma/schema.prisma
-├── Dockerfile                   # Multi-stage build (Next.js standalone)
-├── docker-compose.yml           # Конфіг для NPM
-├── .env.example
-├── next.config.ts               # output: "standalone"
-└── package.json
-```
 
 ## ✏️ Як змінити контент
 
-Усі тексти, ціни, пакети, відгуки та FAQ — в одному файлі:
+Усі тексти, ціни, пакети, відгуки, FAQ — в одному файлі:
 
 ```
-src/lib/site-data.ts
+includes/data.php
 ```
 
-Відредагуй → збережи → `git add . && git commit -m "..."` → `git push` → на сервері `git pull && docker compose up -d --build`.
+Відредагуй → збережи → на сервері `git pull`. Перезапуск Docker не потрібний.
 
 ## 🖼 Як замінити фотографії
 
-Зображення лежать у `public/images/`. Поклади файл з тим самим ім'ям або онови шлях у `site-data.ts`.
+Зображення лежать у `img/`. Поклади файл з тим самим ім'ям або онови шлях у `includes/data.php`.
+
+---
 
 ## 🔒 Безпека
 
 - Після першого push у репозиторій **обов'язково відклич GitHub Personal Access Token** (Settings → Developer settings → Personal access tokens → Revoke).
-- Файл `.env` у репозиторій **не потрапляє** (в `.gitignore`).
-- Контейнер працює від непривілейованого користувача `nextjs`.
+- Контейнер працює від непривілейованого користувача всередині Docker.
 - Порт не відкритий назовні — доступ тільки через NPM.
 
 ## 📞 Контакти

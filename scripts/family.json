@@ -1,0 +1,26 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "family photoshoot outdoor warm natural"
+✅ Got 2 images
+{
+  "success": true,
+  "query": "family photoshoot outdoor warm natural",
+  "count": 2,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/f543173fab0f.jpg",
+      "caption": "",
+      "source": "Meliza Orellana",
+      "original_width": "800px",
+      "original_height": "1200px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/26007ffe2a7e.jpg",
+      "caption": "",
+      "source": "Kelly Chance Photography",
+      "original_width": "2500px",
+      "original_height": "1713px"
+    }
+  ]
+}

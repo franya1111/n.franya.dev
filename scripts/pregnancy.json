@@ -1,0 +1,26 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "maternity pregnancy photoshoot elegant outdoor"
+✅ Got 2 images
+{
+  "success": true,
+  "query": "maternity pregnancy photoshoot elegant outdoor",
+  "count": 2,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/89d9e9894bb5.jpg",
+      "caption": "",
+      "source": "Romany Flower",
+      "original_width": "1200px",
+      "original_height": "800px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/7d309409fa46.jpg",
+      "caption": "",
+      "source": "Lydia Suzanne Photography",
+      "original_width": "800px",
+      "original_height": "1200px"
+    }
+  ]
+}

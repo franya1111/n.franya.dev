@@ -1,0 +1,26 @@
+🚀 Initializing Z-AI SDK...
+🔎 Searching images: "birthday photoshoot candles celebration portrait"
+✅ Got 2 images
+{
+  "success": true,
+  "query": "birthday photoshoot candles celebration portrait",
+  "count": 2,
+  "ranked": false,
+  "captioned_count": 0,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/3277aa85f072.jpeg",
+      "caption": "",
+      "source": "Pexels",
+      "original_width": "2624px",
+      "original_height": "3936px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/9e227e4d12c2.jpg",
+      "caption": "",
+      "source": "Pinterest",
+      "original_width": "736px",
+      "original_height": "1308px"
+    }
+  ]
+}

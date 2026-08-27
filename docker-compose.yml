@@ -1,8 +1,28 @@
-# Docker Compose for local production run
-# Usage:
-#   docker compose up --build -d   # start in background
-#   docker compose logs -f          # tail logs
-#   docker compose down             # stop and remove containers
+# ===================================================================
+# krasnobaeva — photo & video
+# Docker Compose for Cloudflare Tunnel setup
+# ===================================================================
+#
+# Як це працює у твоїй схемі:
+#
+#   Cloudflare (n.franya.dev) ──► Cloudflare Tunnel ──► http://localhost:${PORT}
+#                                                              │
+#                                                              ▼
+#                                                   Цей docker-контейнер
+#
+# Один контейнер = один сайт. Ніяких конфліктів портів.
+#
+# Кроки:
+#   1. Склонуй репозиторій у папку піддомену на сервері:
+#        git clone https://github.com/franya1111/n.franya.dev.git /var/www/n.franya.dev
+#   2. (Опціонально) Зміни порт у .env, якщо 3000 зайнятий:
+#        echo "PORT=3001" > .env
+#   3. Запусти:
+#        docker compose up -d --build
+#   4. У конфігу Cloudflare Tunnel вкажи: http://localhost:3000
+#      (або той порт, що ти обрав у .env)
+#
+# ===================================================================
 
 services:
   web:
@@ -10,15 +30,25 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: krasnobaeva-web
+    # Порт береться з .env (за замовчуванням 3000).
+    # Якщо 3000 зайнятий — створи .env з PORT=3001 (або іншим вільним)
+    # і вказуй цей же порт у Cloudflare Tunnel.
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:3000"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=file:/app/data/custom.db
+      - NEXT_TELEMETRY_DISABLED=1
     volumes:
-      # Persist SQLite database between container restarts
+      # SQLite-база зберігається між перезапусками контейнера
       - krasnobaeva-data:/app/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
 volumes:
   krasnobaeva-data:

@@ -2,133 +2,156 @@
 
 Сайт фотографа Тетяни Краснобаєвої. Зібрано на **Next.js 16** (App Router, TypeScript, Tailwind CSS 4, shadcn/ui).
 
-## ⚡ Швидкий старт через Docker (рекомендується)
+---
 
-Потрібен лише встановлений **Docker** (з плагіном Compose v2) — нічого більше не ставиться локально.
+## 🚀 Запуск на твоєму сервері (Linux Mint + Cloudflare Tunnel)
+
+У тебе вже працює схема: піддомен `n.franya.dev` → Cloudflare Tunnel → папка на твоєму локальному сервері. Тому все зводиться до трьох кроків.
+
+### Крок 1. Клонувати репозиторій у папку піддомену
 
 ```bash
-# 1. Клонувати репозиторій
-git clone https://github.com/franya1111/n.franya.dev.git
+# Перейди у папку, де ти зберігаєш сайти (заміни /var/www на свій шлях)
+cd /var/www
+
+# Клонуй репозиторій
+git clone https://github.com/franya1111/n.franya.dev.git n.franya.dev
+
+# Зайди у папку
 cd n.franya.dev
+```
 
-# 2. Підняти контейнер (збирається образ і запускається на порту 3000)
-docker compose up --build -d
+### Крок 2. (Опціонально) Змінити порт, якщо 3000 зайнятий
 
-# 3. Відкрити в браузері
-#    http://localhost:3000
+```bash
+# Подивись, чи вільний порт 3000
+sudo ss -tlnp | grep :3000 || echo "Порт 3000 вільний ✅"
 
-# Зупинити й видалити контейнер:
+# Якщо зайнятий — створи файл .env і поміняй порт:
+cp .env.example .env
+nano .env
+#   PORT=3001   # або інший вільний
+```
+
+### Крок 3. Запустити Docker
+
+```bash
+docker compose up -d --build
+```
+
+Це воно. Готово. Через ~30 секунд контейнер підніметься, і Cloudflare Tunnel побачить сайт за адресою:
+
+```
+https://n.franya.dev
+```
+
+> У конфігурації Cloudflare Tunnel має бути правило, яке перенаправляє `n.franya.dev` на `http://localhost:3000` (або той порт, який ти обрав). Якщо змінював порт — онови його і в Cloudflare.
+
+---
+
+## 🔧 Корисні команди
+
+```bash
+# Подивитись логи (в реальному часі)
+docker compose logs -f
+
+# Подивитись статус контейнера
+docker compose ps
+
+# Перезапустити контейнер
+docker compose restart
+
+# Зупинити і видалити контейнер (дані в БД не зникнуть — вони в volume)
 docker compose down
 
-# Подивитись логи:
-docker compose logs -f
+# Перебудувати образ (після git pull або зміни коду)
+git pull
+docker compose up -d --build
+
+# Повністю стерти все, включно з базою (УВАГА: видалить усі дані)
+docker compose down -v
 ```
 
-Щоб змінити порт (наприклад, на 8080) — відредагуй `docker-compose.yml`:
+---
 
-```yaml
-ports:
-  - "8080:3000"
-```
-
-База даних (SQLite) зберігається у Docker volume `krasnobaeva-data` — тобто між перезапусками контейнера всі дані лишаються на місці.
-
-## 🛠 Запуск без Docker (для розробки)
-
-Потрібні **Node.js 20+** та **Bun**.
+## 🔄 Як оновлювати сайт, коли я заливаю нові зміни
 
 ```bash
-# 1. Встановити залежності
-bun install
-
-# 2. Скопіювати .env.example у .env і за потреби відредагувати
-cp .env.example .env
-
-# 3. Запустити dev-сервер
-bun run dev
-# Сайт буде на http://localhost:3000
-
-# Production-збірка:
-bun run build
-bun run start
+cd /var/www/n.franya.dev
+git pull
+docker compose up -d --build
 ```
 
-## 🚀 Деплой на Vercel / Render / Railway / Netlify
+Через ~30 секунд нова версія буде жива на `n.franya.dev`.
 
-Будь-який сервіс, що підтримує Next.js, підійде:
+---
 
-### Vercel (найпростіше)
-1. Зайти на https://vercel.com
-2. «Add New Project» → обрати цей GitHub-репозиторій
-3. Frame Preset: **Next.js** (визначиться автоматично)
-4. Натиснути **Deploy** — готово через ~1 хвилину
+## 🛠 Запуск без Docker (для локальної розробки)
 
-### Render / Railway
-1. Створити новий Web Service
-2. Підключити GitHub-репозиторій
-3. Build command: `bun install && bun run build`
-4. Start command: `bun run start`
-5. Порт: `3000`
+```bash
+# Потрібен Node.js 20+ і Bun
+bun install
+cp .env.example .env
+bun run dev          # http://localhost:3000
+```
 
-## 📦 Структура проекту
+---
+
+## 📦 Що всередині
 
 ```
 ├── src/
 │   ├── app/                     # Next.js App Router
-│   │   ├── layout.tsx           # Шрифти + метадані
-│   │   ├── page.tsx             # Головна сторінка (з view-станом)
-│   │   ├── globals.css          # Дизайн-система
+│   │   ├── layout.tsx           # Шрифти Forum + Nunito Sans
+│   │   ├── page.tsx             # Головна сторінка
+│   │   ├── globals.css          # Дизайн-система (золото + тёмный)
 │   │   └── api/
 │   ├── components/
 │   │   ├── ui/                  # shadcn/ui компоненти
-│   │   └── site/                # Сторінкові секції сайту
-│   │       ├── header.tsx       # Шапка + навігація
+│   │   └── site/                # Секції сайту
+│   │       ├── header.tsx       # Шапка + dropdown + burger
 │   │       ├── hero.tsx
 │   │       ├── about.tsx
 │   │       ├── services.tsx     # 6 квадратних карток категорій
 │   │       ├── reviews.tsx      # Автопрокрутка відгуків
-│   │       ├── booking-form.tsx # Анкета бронювання
+│   │       ├── booking-form.tsx # Анкета бронювання → Telegram
 │   │       ├── faq.tsx
 │   │       ├── contacts.tsx
 │   │       ├── footer.tsx
 │   │       ├── category-detail-view.tsx  # Сторінка категорії з цінами
 │   │       └── loader.tsx
 │   ├── lib/
-│   │   ├── site-data.ts         # Усі дані сайту (категорії, ціни, відгуки, FAQ)
+│   │   ├── site-data.ts         # Усі тексти, ціни, відгуки, FAQ
 │   │   ├── db.ts                # Prisma-клієнт
 │   │   └── utils.ts
 │   └── hooks/
-├── public/
-│   └── images/                  # Усі зображення
-├── prisma/
-│   └── schema.prisma            # Схема БД
-├── Dockerfile                   # Багатоетапна збірка
-├── docker-compose.yml           # Локальний запуск: docker compose up
-├── .dockerignore
-├── .env.example                 # Приклад змінних середовища
-├── next.config.ts               # output: "standalone" — оптимізовано для Docker
-├── tailwind.config.ts
+├── public/images/               # Усі зображення
+├── prisma/schema.prisma
+├── Dockerfile                   # Multi-stage build (Next.js standalone)
+├── docker-compose.yml           # Конфіг для docker compose up
+├── .env.example                 # Приклад змінних (PORT=3000)
+├── next.config.ts               # output: "standalone"
 └── package.json
 ```
 
 ## ✏️ Як змінити контент
 
-Усі тексти, ціни, пакети, відгуки та FAQ знаходяться в одному файлі:
+Усі тексти, ціни, пакети, відгуки та FAQ — в одному файлі:
 
 ```
 src/lib/site-data.ts
 ```
 
-— відредагуй і зберігши, перезавантаж сторінку.
+Відредагуй → збережи → `git add . && git commit -m "update prices"` → `git push` → на сервері `git pull && docker compose up -d --build`.
 
 ## 🖼 Як замінити фотографії
 
-Усі зображення лежать у `public/images/`. Щоб замінити — просто поклади файл з тим самим ім'ям або онови шлях у `site-data.ts`.
+Зображення лежать у `public/images/`. Поклади файл з тим самим ім'ям або онови шлях у `site-data.ts`.
 
 ## 🔒 Безпека
 
-- Після першого запуску з репозиторієм **обов'язково відклич GitHub Personal Access Token**, яким я заливав код (Settings → Developer settings → Personal access tokens → Revoke).
-- Файл `.env` у репозиторій **не потрапляє** (він у `.gitignore`). За потреби створи `.env` локально з `.env.example`.
+- Після першого push у репозиторій **обов'язково відклич GitHub Personal Access Token** (Settings → Developer settings → Personal access tokens → Revoke).
+- Файл `.env` у репозиторій **не потрапляє** (в `.gitignore`). Створюй `.env` локально з `.env.example`.
 
 ## 📞 Контакти
 

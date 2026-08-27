@@ -1,0 +1,40 @@
+# Build artifacts
+node_modules
+.next
+out
+build
+coverage
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs & temp
+*.log
+dev.log
+server.log
+.DS_Store
+
+# Editor / OS
+.vscode
+.idea
+.git
+.gitignore
+
+# Skill / sandbox scripts
+skills
+.zscripts
+tests
+scripts
+download
+tool-results
+examples
+mini-services
+prisma/*.db
+prisma/*.db-journal

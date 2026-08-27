@@ -1,0 +1,25 @@
+# Docker Compose for local production run
+# Usage:
+#   docker compose up --build -d   # start in background
+#   docker compose logs -f          # tail logs
+#   docker compose down             # stop and remove containers
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: krasnobaeva-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/custom.db
+    volumes:
+      # Persist SQLite database between container restarts
+      - krasnobaeva-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  krasnobaeva-data:
+    driver: local

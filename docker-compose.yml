@@ -1,26 +1,29 @@
 # ===================================================================
 # krasnobaeva — photo & video
-# Docker Compose for Cloudflare Tunnel setup
+# Docker Compose для Nginx Proxy Manager (NPM)
 # ===================================================================
 #
 # Як це працює у твоїй схемі:
 #
-#   Cloudflare (n.franya.dev) ──► Cloudflare Tunnel ──► http://localhost:${PORT}
-#                                                              │
-#                                                              ▼
-#                                                   Цей docker-контейнер
+#   Internet → Cloudflare → :80 (NPM) → my-test_default → krasnobaeva-web:3000
+#                                                  ↑
+#                                          цей контейнер
 #
-# Один контейнер = один сайт. Ніяких конфліктів портів.
+# Контейнер НЕ пробросжує порт назовні — NPM звертається до нього
+# напряму через Docker-мережу my-test_default.
 #
-# Кроки:
-#   1. Склонуй репозиторій у папку піддомену на сервері:
-#        git clone https://github.com/franya1111/n.franya.dev.git /var/www/n.franya.dev
-#   2. (Опціонально) Зміни порт у .env, якщо 3000 зайнятий:
-#        echo "PORT=3001" > .env
-#   3. Запусти:
-#        docker compose up -d --build
-#   4. У конфігу Cloudflare Tunnel вкажи: http://localhost:3000
-#      (або той порт, що ти обрав у .env)
+# КРОКИ:
+#   1. git clone https://github.com/franya1111/n.franya.dev.git
+#   2. cd n.franya.dev
+#   3. docker compose up -d --build
+#   4. В адмінці NPM (http://твій-сервер:81) додай Proxy Host:
+#        Domain Names:  n.franya.dev
+#        Scheme:        http
+#        Forward Hostname: krasnobaeva-web
+#        Forward Port:  3000
+#        ☑ Block Common Exploits
+#        ☑ Websockets Support
+#        (SSL tab → Request a new SSL Certificate → ☑ Force SSL)
 #
 # ===================================================================
 
@@ -30,11 +33,12 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: krasnobaeva-web
-    # Порт береться з .env (за замовчуванням 3000).
-    # Якщо 3000 зайнятий — створи .env з PORT=3001 (або іншим вільним)
-    # і вказуй цей же порт у Cloudflare Tunnel.
-    ports:
-      - "${PORT:-3000}:3000"
+    # НЕ пробрасжуємо порт назовні — NPM звертається напряму через мережу.
+    # Якщо дуже треба прямий доступ для дебагу, розкоментуй рядок нижче:
+    # ports:
+    #   - "3005:3000"
+    expose:
+      - "3000"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=file:/app/data/custom.db
@@ -50,7 +54,18 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+    networks:
+      - krasnobaeva-internal  # внутрішня мережа цього проекту
+      - my-test_default       # зовнішня мережа NPM
 
 volumes:
   krasnobaeva-data:
     driver: local
+
+networks:
+  krasnobaeva-internal:
+    driver: bridge
+  # Ця мережа вже існує на твоєму сервері — її створив NPM при установці.
+  # Підключаємося як зовнішню, щоб NPM бачив контейнер krasnobaeva-web.
+  my-test_default:
+    external: true

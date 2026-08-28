@@ -1,6 +1,8 @@
 <?php
-require_once dirname(__DIR__) . '/includes/auth.php';
-require_once dirname(__DIR__, 2) . '/includes/data.php';
+// test-telegram.php знаходиться в admin/, auth.php в admin/includes/
+require_once __DIR__ . '/includes/auth.php';
+// Після завантаження auth.php маємо PROJECT_ROOT — використовуємо для data.php
+require_once PROJECT_ROOT . '/includes/data.php';
 require_login();
 
 // Беремо функцію з api/booking.php

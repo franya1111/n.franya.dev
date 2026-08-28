@@ -1,5 +1,6 @@
 <?php
-require_once dirname(__DIR__) . '/includes/auth.php';
+// login.php знаходиться в admin/, auth.php в admin/includes/
+require_once __DIR__ . '/includes/auth.php';
 
 // Logout
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {

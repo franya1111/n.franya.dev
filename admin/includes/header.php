@@ -1,6 +1,8 @@
 <?php
-require_once dirname(__DIR__) . '/includes/auth.php';
-require_once dirname(__DIR__) . '/includes/data.php';
+// auth.php в тій самій папці (admin/includes/) — просто __DIR__
+require_once __DIR__ . '/auth.php';
+// data.php у project_root/includes/ — використовуємо PROJECT_ROOT з auth.php
+require_once PROJECT_ROOT . '/includes/data.php';
 require_login();
 
 $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');

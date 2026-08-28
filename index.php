@@ -79,8 +79,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="container">
             <div class="reviews-header reveal">
                 <span class="section-label">Відгуки</span>
-                <h2 class="section-title">Що кажуть клієнти</h2>
-                <p class="section-subtitle">Понад 200 зйомок за 8 років — кожна зі своєю історією. Ось лише деякі відгуки.</p>
+                <h2 class="section-title">Відгуки моїх клієнтів</h2>
                 <a href="<?= htmlspecialchars($SETTINGS['telegram_url']) ?>" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="margin-top: 32px;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                     Залишити відгук

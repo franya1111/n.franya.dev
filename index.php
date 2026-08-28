@@ -64,7 +64,7 @@ require_once __DIR__ . '/includes/header.php';
                 <?php else: ?>
                     <?php foreach ($CATEGORIES as $id => $cat): ?>
                         <a href="category.php?id=<?= $id ?>" class="service-card reveal">
-                            <img src="<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
+                            <img src="<?= htmlspecialchars(asset_url($cat['image'])) ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
                             <div class="service-card-overlay"></div>
                             <div class="service-card-content">
                                 <h3><?= htmlspecialchars($cat['title']) ?></h3>

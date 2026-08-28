@@ -144,7 +144,12 @@
         // Оновити прев'ю
         const previewWrapper = block.querySelector('.image-preview-wrapper');
         if (previewWrapper && uploadedPaths.length === 1) {
-            previewWrapper.innerHTML = '<img src="' + uploadedPaths[0] + '?' + Date.now() + '" alt="Прев\'ю" class="image-preview">';
+            // Нормалізуємо шлях — якщо починається не з / чи http — додаємо /
+            let displayPath = uploadedPaths[0];
+            if (!/^https?:|^\/\//.test(displayPath) && !displayPath.startsWith('/')) {
+                displayPath = '/' + displayPath;
+            }
+            previewWrapper.innerHTML = '<img src="' + displayPath + '?' + Date.now() + '" alt="Прев\'ю" class="image-preview">';
         }
 
         if (statusEl) {

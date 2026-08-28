@@ -55,7 +55,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="public-gallery-grid">
                     <?php foreach ($filtered as $g): ?>
                         <div class="public-gallery-item" data-category="<?= htmlspecialchars($g['category']) ?>">
-                            <img src="<?= htmlspecialchars($g['image']) ?>" alt="<?= htmlspecialchars($g['title']) ?>" loading="lazy">
+                            <img src="<?= htmlspecialchars(asset_url($g['image'])) ?>" alt="<?= htmlspecialchars($g['title']) ?>" loading="lazy">
                             <div class="public-gallery-overlay">
                                 <span class="public-gallery-title"><?= htmlspecialchars($g['title']) ?></span>
                                 <?php if (!empty($g['category']) && isset($category_titles[$g['category']])): ?>

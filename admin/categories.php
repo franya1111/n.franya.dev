@@ -120,7 +120,7 @@ $active_cat = $_GET['cat'] ?? (array_key_first($CATEGORIES) ?? '');
             <div class="image-upload-block" data-target-input="image">
                 <div class="image-preview-wrapper">
                     <?php if (!empty($cat['image'])): ?>
-                        <img src="<?= htmlspecialchars($cat['image']) ?>" alt="Прев'ю" class="image-preview" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <img src="<?= htmlspecialchars(asset_url($cat['image'])) ?>" alt="Прев'ю" class="image-preview" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
                         <span class="image-preview-placeholder" style="display:none;">⚠ Не знайдено<br><?= htmlspecialchars($cat['image']) ?></span>
                     <?php else: ?>
                         <span class="image-preview-placeholder">📷 Немає фото</span>
@@ -171,7 +171,7 @@ $active_cat = $_GET['cat'] ?? (array_key_first($CATEGORIES) ?? '');
                     <div class="gallery-preview-grid">
                         <?php foreach ($cat['gallery'] as $g_img): ?>
                             <div class="gallery-preview-item">
-                                <img src="<?= htmlspecialchars($g_img) ?>" alt="<?= htmlspecialchars($g_img) ?>" onerror="this.style.opacity='0.3';">
+                                <img src="<?= htmlspecialchars(asset_url($g_img)) ?>" alt="<?= htmlspecialchars($g_img) ?>" onerror="this.style.opacity='0.3';">
                                 <span class="gallery-preview-path"><?= htmlspecialchars($g_img) ?></span>
                             </div>
                         <?php endforeach; ?>
@@ -213,7 +213,7 @@ $active_cat = $_GET['cat'] ?? (array_key_first($CATEGORIES) ?? '');
                         <div class="image-upload-block" data-target-input="pkg_image_<?= $i ?>">
                             <div class="image-preview-wrapper">
                                 <?php if (!empty($pkg['image'])): ?>
-                                    <img src="<?= htmlspecialchars($pkg['image']) ?>" alt="Прев'ю" class="image-preview" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                    <img src="<?= htmlspecialchars(asset_url($pkg['image'])) ?>" alt="Прев'ю" class="image-preview" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
                                     <span class="image-preview-placeholder" style="display:none;">⚠ Не знайдено<br><?= htmlspecialchars($pkg['image']) ?></span>
                                 <?php else: ?>
                                     <span class="image-preview-placeholder">📷 Немає фото</span>

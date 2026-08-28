@@ -119,7 +119,7 @@ $category_options = [
         <div class="gallery-admin-grid">
             <?php foreach ($GALLERY as $g): ?>
                 <div class="gallery-admin-item">
-                    <img src="<?= htmlspecialchars($g['image']) ?>" alt="<?= htmlspecialchars($g['title']) ?>" loading="lazy" onerror="this.style.opacity='0.3';this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23222%22 width=%22100%22 height=%22100%22/><text fill=%22%23999%22 x=%2250%22 y=%2255%22 font-size=%2210%22 text-anchor=%22middle%22>No image</text></svg>';">
+                    <img src="<?= htmlspecialchars(asset_url($g['image'])) ?>" alt="<?= htmlspecialchars($g['title']) ?>" loading="lazy" onerror="this.style.opacity='0.3';this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23222%22 width=%22100%22 height=%22100%22/><text fill=%22%23999%22 x=%2250%22 y=%2255%22 font-size=%2210%22 text-anchor=%22middle%22>No image</text></svg>';">
                     <div class="gallery-admin-info">
                         <div class="gallery-admin-title"><?= htmlspecialchars($g['title'] ?: '—') ?></div>
                         <div class="gallery-admin-cat">

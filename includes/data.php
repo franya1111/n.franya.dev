@@ -67,3 +67,23 @@ function get_category($id) {
     global $CATEGORIES;
     return $CATEGORIES[$id] ?? null;
 }
+
+/**
+ * Нормалізує шлях до зображення для використання в <img src>.
+ * Якщо шлях вже абсолютний (http://, https://, /) — повертає як є.
+ * Інакше додає '/' на початок, щоб він працював з будь-якої сторінки
+ * (включно з /admin/).
+ *
+ * Приклад:
+ *   'img/hero.jpg'         → '/img/hero.jpg'
+ *   'uploads/photo.jpg'    → '/uploads/photo.jpg'
+ *   'https://example.com/x.jpg' → 'https://example.com/x.jpg'
+ *   '/img/hero.jpg'        → '/img/hero.jpg'  (вже нормалізовано)
+ */
+function asset_url($path) {
+    $path = trim($path ?? '');
+    if (empty($path)) return '';
+    if (preg_match('#^(https?:)?//#i', $path)) return $path;
+    if (strpos($path, '/') === 0) return $path;
+    return '/' . $path;
+}

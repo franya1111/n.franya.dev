@@ -15,7 +15,7 @@ require_once __DIR__ . '/includes/header.php';
     <!-- CATEGORY HERO -->
     <section class="category-hero">
         <div class="category-hero-bg">
-            <img src="<?= htmlspecialchars($category['image']) ?>" alt="<?= htmlspecialchars($category['title']) ?>">
+            <img src="<?= htmlspecialchars(asset_url($category['image'])) ?>" alt="<?= htmlspecialchars($category['title']) ?>">
         </div>
         <div class="category-hero-content">
             <span class="category-hero-label">Зйомка</span>
@@ -41,7 +41,7 @@ require_once __DIR__ . '/includes/header.php';
             <div class="category-gallery">
                 <?php foreach ($category['gallery'] as $i => $img): ?>
                     <div class="category-gallery-item <?= $i === 1 ? 'middle' : '' ?>">
-                        <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($category['title']) ?> <?= $i + 1 ?>">
+                        <img src="<?= htmlspecialchars(asset_url($img)) ?>" alt="<?= htmlspecialchars($category['title']) ?> <?= $i + 1 ?>">
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -65,7 +65,7 @@ require_once __DIR__ . '/includes/header.php';
                         <?php endif; ?>
 
                         <div class="pricing-img">
-                            <img src="<?= htmlspecialchars($pkg['image']) ?>" alt="<?= htmlspecialchars($pkg['name']) ?>">
+                            <img src="<?= htmlspecialchars(asset_url($pkg['image'])) ?>" alt="<?= htmlspecialchars($pkg['name']) ?>">
                             <div class="pricing-img-info">
                                 <h3><?= htmlspecialchars($pkg['name']) ?></h3>
                                 <span class="pricing-duration"><?= htmlspecialchars($pkg['duration']) ?></span>

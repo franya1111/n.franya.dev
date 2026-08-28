@@ -698,3 +698,69 @@ html.light .gallery-admin-item {
     word-break: break-all;
     font-family: monospace;
 }
+
+/* ===== EXTRA CARDS (dynamic add/remove) ===== */
+.extra-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+html.light .extra-card { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
+.extra-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.extra-card-title {
+    font-family: 'Forum', serif;
+    font-size: 16px;
+    color: var(--gold, #c9a96e);
+}
+
+/* ===== PACKAGE CARD ===== */
+.package-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+}
+html.light .package-card { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
+.package-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.package-card-title {
+    font-family: 'Forum', serif;
+    font-size: 18px;
+    color: var(--gold, #c9a96e);
+    letter-spacing: 0.03em;
+}
+
+/* Image preview placeholder — warn if not found */
+.image-preview-placeholder {
+    color: #9a9590;
+    font-size: 12px;
+    text-align: center;
+    padding: 12px;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+/* ===== STICKY SAVE BAR ===== */
+form > div[style*="position:sticky"] {
+    margin-left: -24px;
+    margin-right: -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}

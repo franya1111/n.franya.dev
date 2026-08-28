@@ -55,108 +55,109 @@
         });
     });
 
-    // ===== IMAGE UPLOAD =====
-    document.querySelectorAll('.file-input').forEach(input => {
-        input.addEventListener('change', async (e) => {
-            const files = Array.from(e.target.files);
-            if (!files.length) return;
+    // ===== IMAGE UPLOAD (через делегування подій — працює для динамічно доданих) =====
+    document.addEventListener('change', async (e) => {
+        const input = e.target;
+        if (!input.classList || !input.classList.contains('file-input')) return;
+        if (!input.files || !input.files.length) return;
 
-            const block = input.closest('.image-upload-block');
-            if (!block) return;
-            const statusEl = block.querySelector('.upload-status');
-            const targetField = input.getAttribute('data-target-field');
-            const appendToId = input.getAttribute('data-append-to');
-            const oldPath = input.getAttribute('data-old-path') || '';
+        const files = Array.from(input.files);
+        const block = input.closest('.image-upload-block');
+        if (!block) return;
+        const statusEl = block.querySelector('.upload-status');
+        const targetField = input.getAttribute('data-target-field');
+        const appendToId = input.getAttribute('data-append-to');
+        const oldPath = input.getAttribute('data-old-path') || '';
 
-            const button = input.closest('label');
-            const originalText = button ? button.innerHTML : '';
+        const button = input.closest('label');
+        if (button) {
+            button.style.opacity = '0.6';
+            button.style.pointerEvents = 'none';
+        }
 
-            if (statusEl) {
-                statusEl.textContent = '⏳ Завантаження...';
-                statusEl.style.color = 'var(--gold,#c9a96e)';
-            }
-            if (button) {
-                button.style.opacity = '0.6';
-                button.style.pointerEvents = 'none';
-            }
+        if (statusEl) {
+            statusEl.textContent = '⏳ Завантаження...';
+            statusEl.style.color = 'var(--gold,#c9a96e)';
+        }
 
-            const uploadedPaths = [];
+        const uploadedPaths = [];
 
-            for (const file of files) {
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('old_path', uploadedPaths.length === 0 ? oldPath : '');
+        for (const file of files) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('old_path', uploadedPaths.length === 0 ? oldPath : '');
 
-                try {
-                    const resp = await fetch('../api/upload.php', {
-                        method: 'POST',
-                        body: formData,
-                    });
-                    const result = await resp.json();
+            try {
+                const resp = await fetch('../api/upload.php', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await resp.json();
 
-                    if (result.success) {
-                        uploadedPaths.push(result.path);
-                    } else {
-                        if (statusEl) {
-                            statusEl.textContent = '❌ ' + (result.message || 'Помилка');
-                            statusEl.style.color = '#e5484d';
-                        }
-                        if (button) {
-                            button.style.opacity = '1';
-                            button.style.pointerEvents = '';
-                        }
-                        return;
-                    }
-                } catch (err) {
-                    console.error('Upload error:', err);
+                if (result.success) {
+                    uploadedPaths.push(result.path);
+                } else {
                     if (statusEl) {
-                        statusEl.textContent = '❌ Помилка мережі';
+                        statusEl.textContent = '❌ ' + (result.message || 'Помилка');
                         statusEl.style.color = '#e5484d';
                     }
                     if (button) {
                         button.style.opacity = '1';
                         button.style.pointerEvents = '';
                     }
+                    input.value = '';
                     return;
                 }
-            }
-
-            // Якщо appendToId — додаємо шляхи в textarea
-            if (appendToId) {
-                const ta = document.getElementById(appendToId);
-                if (ta) {
-                    const current = ta.value.trim();
-                    const newPaths = uploadedPaths.join('\n');
-                    ta.value = current ? (current + '\n' + newPaths) : newPaths;
+            } catch (err) {
+                console.error('Upload error:', err);
+                if (statusEl) {
+                    statusEl.textContent = '❌ Помилка мережі';
+                    statusEl.style.color = '#e5484d';
                 }
-            }
-
-            // Якщо targetField — встановлюємо шлях в інпут
-            if (targetField) {
-                const target = document.getElementsByName(targetField)[0] || document.getElementById(targetField);
-                if (target) {
-                    target.value = uploadedPaths[0];
+                if (button) {
+                    button.style.opacity = '1';
+                    button.style.pointerEvents = '';
                 }
+                input.value = '';
+                return;
             }
+        }
 
-            // Оновити прев'ю
-            const previewWrapper = block.querySelector('.image-preview-wrapper');
-            if (previewWrapper && uploadedPaths.length === 1) {
-                previewWrapper.innerHTML = '<img src="' + uploadedPaths[0] + '?' + Date.now() + '" alt="Прев\'ю" class="image-preview">';
+        // Якщо appendToId — додаємо шляхи в textarea
+        if (appendToId) {
+            const ta = document.getElementById(appendToId);
+            if (ta) {
+                const current = ta.value.trim();
+                const newPaths = uploadedPaths.join('\n');
+                ta.value = current ? (current + '\n' + newPaths) : newPaths;
             }
+        }
 
-            if (statusEl) {
-                statusEl.textContent = '✅ Завантажено: ' + uploadedPaths.length + ' фото';
-                statusEl.style.color = '#4ade80';
-                setTimeout(() => { statusEl.textContent = ''; }, 3000);
+        // Якщо targetField — встановлюємо шлях в інпут
+        if (targetField) {
+            const target = document.getElementsByName(targetField)[0] || document.getElementById(targetField);
+            if (target) {
+                target.value = uploadedPaths[0];
             }
-            if (button) {
-                button.style.opacity = '1';
-                button.style.pointerEvents = '';
-            }
+        }
 
-            // Очистити інпут щоб можна було завантажити ще раз те саме фото
-            input.value = '';
-        });
+        // Оновити прев'ю
+        const previewWrapper = block.querySelector('.image-preview-wrapper');
+        if (previewWrapper && uploadedPaths.length === 1) {
+            previewWrapper.innerHTML = '<img src="' + uploadedPaths[0] + '?' + Date.now() + '" alt="Прев\'ю" class="image-preview">';
+        }
+
+        if (statusEl) {
+            statusEl.textContent = '✅ Завантажено: ' + uploadedPaths.length + ' фото';
+            statusEl.style.color = '#4ade80';
+            setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
+        }
+        if (button) {
+            button.style.opacity = '1';
+            button.style.pointerEvents = '';
+        }
+
+        // Очистити інпут
+        input.value = '';
     });
 })();

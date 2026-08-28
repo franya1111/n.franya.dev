@@ -123,24 +123,39 @@ require_once __DIR__ . '/includes/header.php';
     <!-- BOOKING -->
     <section class="booking" id="booking">
         <div class="booking-card reveal">
-            <div class="booking-glow tl"></div>
-            <div class="booking-glow br"></div>
             <div class="booking-grid">
-                <div>
+                <!-- Ліва частина: заголовок + переваги -->
+                <div class="booking-intro">
                     <span class="section-label">Анкета бронювання</span>
                     <h2 class="section-title">Забронувати дату</h2>
-                    <p style="color: var(--text-muted); font-size: 15px; line-height: 1.7;">
-                        Заповніть коротку анкету — і я зв'яжуся з вами для підтвердження дати та обговорення деталей зйомки. Передоплата 500 грн гарантує резерв часу спеціально для вас.
+                    <p class="booking-intro-text">
+                        Заповніть коротку анкету — це займе лише кілька хвилин. Я перевірю вільність дати, зв'яжуся з вами та допоможу обрати найкращий формат зйомки саме для вас.
                     </p>
                     <ul class="booking-info-list">
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Відповідь протягом 2 годин</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Підбір пакету під ваш бюджет</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Безкоштовна консультація</li>
+                        <li>
+                            <span class="check-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span>Відповім протягом 15 хвилин</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span>Допоможу обрати оптимальний формат</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span>Підкажу, як підготуватися до зйомки без зайвих хвилювань</span>
+                        </li>
                     </ul>
                 </div>
 
-                <div id="bookingFormFields">
-                    <form id="bookingForm" method="post">
+                <!-- Права частина: форма -->
+                <div id="bookingFormFields" class="booking-form-wrap">
+                    <form id="bookingForm" method="post" class="booking-form">
                         <div class="form-group">
                             <label class="form-label">Ім'я *</label>
                             <input type="text" name="name" required placeholder="Ваше ім'я" class="form-input">
@@ -166,14 +181,14 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
                         <div class="form-group">
                             <label class="form-label">Повідомлення</label>
-                            <textarea name="message" rows="3" placeholder="Опишіть побажання, локацію, кількість людей…" class="form-textarea"></textarea>
+                            <textarea name="message" rows="3" placeholder="Описати побажання, локацію, кількість людей..." class="form-textarea"></textarea>
                         </div>
-                        <button type="submit" class="btn-primary" style="width: 100%;">
+                        <button type="submit" class="btn-primary booking-submit">
                             Надіслати заявку
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                         </button>
-                        <p style="text-align:center; font-size:11px; color: var(--text-muted); margin-top: 12px;">
-                            Натискаючи кнопку, ви відкриєте Telegram зі заповненим повідомленням
+                        <p class="booking-form-hint">
+                            Натискаючи кнопку, ви відкриєте Telegram із заповненим повідомленням
                         </p>
                     </form>
                 </div>

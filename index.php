@@ -123,125 +123,36 @@ require_once __DIR__ . '/includes/header.php';
     <!-- BOOKING -->
     <section class="booking" id="booking">
         <div class="booking-card reveal">
-            <div class="booking-grid">
-                <!-- Ліва частина: заголовок + переваги -->
-                <div class="booking-intro">
-                    <span class="section-label">Анкета бронювання</span>
-                    <h2 class="section-title">Забронувати дату</h2>
-                    <p class="booking-intro-text">
-                        Заповніть коротку анкету — це займе лише кілька хвилин. Я перевірю вільність дати, зв'яжуся з вами та допоможу обрати найкращий формат зйомки саме для вас.
-                    </p>
-                    <ul class="booking-info-list">
-                        <li>
-                            <span class="check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                            </span>
-                            <span>Відповім протягом 15 хвилин</span>
-                        </li>
-                        <li>
-                            <span class="check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                            </span>
-                            <span>Допоможу обрати оптимальний формат</span>
-                        </li>
-                        <li>
-                            <span class="check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                            </span>
-                            <span>Підкажу, як підготуватися до зйомки без зайвих хвилювань</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Права частина: форма -->
-                <div id="bookingFormFields" class="booking-form-wrap">
-                    <form id="bookingForm" method="post" class="booking-form">
-                        <div class="form-group">
-                            <label class="form-label">Ім'я *</label>
-                            <input type="text" name="name" required placeholder="Ваше ім'я" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Телефон *</label>
-                            <input type="tel" name="phone" required placeholder="+380 __ ___ __ __" class="form-input">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Категорія зйомки</label>
-                                <select name="category" id="bookingCategory" class="form-select">
-                                    <option value="">Оберіть…</option>
-                                    <?php foreach ($CATEGORIES as $id => $c): ?>
-                                        <option value="<?= htmlspecialchars($c['title']) ?>" data-cat-id="<?= htmlspecialchars($id) ?>"><?= htmlspecialchars($c['title']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Пакет</label>
-                                <select name="package" id="bookingPackage" class="form-select" disabled>
-                                    <option value="">Спочатку категорію…</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Бажана дата</label>
-                            <input type="date" name="date" class="form-input">
-                        </div>
-
-                        <!-- Чекбокс "постійний клієнт" + розрахунок знижки -->
-                        <div class="booking-discount" id="bookingDiscountBlock">
-                            <label class="discount-checkbox">
-                                <input type="checkbox" name="is_regular" id="bookingIsRegular" value="1">
-                                <span class="discount-checkbox-box">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                                </span>
-                                <span class="discount-checkbox-label">
-                                    Я постійний клієнт
-                                    <span class="discount-badge">−10%</span>
-                                </span>
-                            </label>
-                            <div class="discount-summary" id="discountSummary" style="display:none;">
-                                <div class="discount-summary-row">
-                                    <span>Пакет:</span>
-                                    <strong id="discountPackageName">—</strong>
-                                </div>
-                                <div class="discount-summary-row">
-                                    <span>Тривалість:</span>
-                                    <strong id="discountDuration">—</strong>
-                                </div>
-                                <div class="discount-summary-row discount-summary-price">
-                                    <span>Ціна:</span>
-                                    <span class="price-old" id="discountPriceOld">—</span>
-                                    <span class="price-arrow">→</span>
-                                    <span class="price-new" id="discountPriceNew">—</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Повідомлення</label>
-                            <textarea name="message" rows="3" placeholder="Описати побажання, локацію, кількість людей..." class="form-textarea"></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary booking-submit">
-                            Надіслати заявку
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                        </button>
-                        <p class="booking-form-hint">
-                            Натискаючи кнопку, ви відкриєте Telegram із заповненим повідомленням
-                        </p>
-
-                        <!-- Дані для JS — всі категорії з пакетами -->
-                        <script>
-                        window.CATEGORIES_DATA = <?= json_encode($CATEGORIES, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
-                        </script>
-                    </form>
-                </div>
-
-                <div id="bookingSuccess" class="form-success" style="display: none;">
-                    <div class="form-success-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                    <h3>Дякую!</h3>
-                    <p>Ваша заявка надіслана. Я зв'яжуся з вами найближчим часом для підтвердження дати та деталей зйомки.</p>
-                </div>
+            <div class="booking-intro" style="text-align:center; max-width:680px; margin:0 auto;">
+                <span class="section-label">Анкета бронювання</span>
+                <h2 class="section-title">Забронувати зйомку</h2>
+                <p class="booking-intro-text">
+                    Заповніть коротку анкету — це займе лише кілька хвилин. Я перевірю вільність дати, зв'яжуся з вами та допоможу обрати найкращий формат зйомки саме для вас.
+                </p>
+                <ul class="booking-info-list booking-info-list-centered">
+                    <li>
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </span>
+                        <span>Відповім протягом 15 хвилин</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </span>
+                        <span>Допоможу обрати оптимальний формат</span>
+                    </li>
+                    <li>
+                        <span class="check-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </span>
+                        <span>Підкажу, як підготуватися до зйомки без зайвих хвилювань</span>
+                    </li>
+                </ul>
+                <a href="booking.php" class="btn-primary" style="margin-top:24px; padding:18px 36px; font-size:13px;">
+                    Заповнити анкету
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
             </div>
         </div>
     </section>

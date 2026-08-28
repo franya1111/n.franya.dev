@@ -82,8 +82,17 @@ $new_count = count(array_filter($BOOKINGS, fn($b) => ($b['status'] ?? 'new') ===
                                 <button type="submit" class="btn btn-ghost btn-sm">↑ Повернути до нових</button>
                             </form>
                         <?php endif; ?>
-                        <a href="https://t.me/<?= preg_replace('/[^a-zA-Z0-9_]/', '', $b['phone']) ?>" target="_blank" class="btn btn-ghost btn-sm">Telegram</a>
-                        <a href="tel:<?= preg_replace('/[^0-9+]/', '', $b['phone']) ?>" class="btn btn-ghost btn-sm">Подзвонити</a>
+                        <?php
+                        $cm_quick = $b['contact_method'] ?? 'phone';
+                        $cv_quick = $b['contact_value'] ?? '';
+                        if ($cm_quick === 'phone'):
+                        ?>
+                            <a href="tel:<?= preg_replace('/[^0-9+]/', '', $cv_quick) ?>" class="btn btn-ghost btn-sm">📞 Подзвонити</a>
+                        <?php elseif ($cm_quick === 'telegram'): ?>
+                            <a href="https://t.me/<?= ltrim($cv_quick, '@') ?>" target="_blank" class="btn btn-ghost btn-sm">✈️ Telegram</a>
+                        <?php elseif ($cm_quick === 'instagram'): ?>
+                            <a href="https://instagram.com/<?= ltrim($cv_quick, '@') ?>" target="_blank" class="btn btn-ghost btn-sm">📷 Instagram</a>
+                        <?php endif; ?>
                         <form method="post" style="display:inline;">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?= htmlspecialchars($b['id']) ?>">
@@ -94,13 +103,7 @@ $new_count = count(array_filter($BOOKINGS, fn($b) => ($b['status'] ?? 'new') ===
 
                 <div class="booking-detail">
                     <div>
-                        <div class="booking-detail-label">Телефон</div>
-                        <div class="booking-detail-value">
-                            <a href="tel:<?= preg_replace('/[^0-9+]/', '', $b['phone']) ?>" style="color:var(--gold,#c9a96e);text-decoration:none;"><?= htmlspecialchars($b['phone']) ?></a>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="booking-detail-label">Категорія зйомки</div>
+                        <div class="booking-detail-label">Вид зйомки</div>
                         <div class="booking-detail-value"><?= htmlspecialchars($b['category'] ?: '—') ?></div>
                     </div>
                     <?php if (!empty($b['package'])): ?>
@@ -109,10 +112,22 @@ $new_count = count(array_filter($BOOKINGS, fn($b) => ($b['status'] ?? 'new') ===
                         <div class="booking-detail-value"><?= htmlspecialchars($b['package']) ?></div>
                     </div>
                     <?php endif; ?>
+                    <?php if (!empty($b['participants'])): ?>
+                    <div>
+                        <div class="booking-detail-label">Учасників</div>
+                        <div class="booking-detail-value"><?= htmlspecialchars($b['participants']) ?></div>
+                    </div>
+                    <?php endif; ?>
                     <div>
                         <div class="booking-detail-label">Бажана дата</div>
                         <div class="booking-detail-value"><?= !empty($b['date']) ? date('d.m.Y', strtotime($b['date'])) : '—' ?></div>
                     </div>
+                    <?php if (!empty($b['time'])): ?>
+                    <div>
+                        <div class="booking-detail-label">Час</div>
+                        <div class="booking-detail-value"><?= htmlspecialchars($b['time']) ?></div>
+                    </div>
+                    <?php endif; ?>
                     <?php if (!empty($b['is_regular'])): ?>
                     <div>
                         <div class="booking-detail-label">Постійний клієнт</div>
@@ -124,6 +139,27 @@ $new_count = count(array_filter($BOOKINGS, fn($b) => ($b['status'] ?? 'new') ===
                         </div>
                     </div>
                     <?php endif; ?>
+                    <div>
+                        <div class="booking-detail-label">Спосіб зв'язку</div>
+                        <div class="booking-detail-value">
+                            <?php
+                            $cm = $b['contact_method'] ?? 'phone';
+                            $cm_label = ['phone' => '📞 Телефон', 'telegram' => '✈️ Telegram', 'instagram' => '📷 Instagram'][$cm] ?? $cm;
+                            echo htmlspecialchars($cm_label);
+                            ?>
+                            <div style="margin-top:4px;">
+                                <?php if ($cm === 'phone'): ?>
+                                    <a href="tel:<?= preg_replace('/[^0-9+]/', '', $b['contact_value'] ?? '') ?>" style="color:var(--gold,#c9a96e);text-decoration:none;"><?= htmlspecialchars($b['contact_value']) ?></a>
+                                <?php elseif ($cm === 'telegram'): ?>
+                                    <a href="https://t.me/<?= ltrim($b['contact_value'] ?? '', '@') ?>" target="_blank" style="color:var(--gold,#c9a96e);text-decoration:none;"><?= htmlspecialchars($b['contact_value']) ?></a>
+                                <?php elseif ($cm === 'instagram'): ?>
+                                    <a href="https://instagram.com/<?= ltrim($b['contact_value'] ?? '', '@') ?>" target="_blank" style="color:var(--gold,#c9a96e);text-decoration:none;"><?= htmlspecialchars($b['contact_value']) ?></a>
+                                <?php else: ?>
+                                    <?= htmlspecialchars($b['contact_value'] ?? '—') ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
                     <div>
                         <div class="booking-detail-label">IP</div>
                         <div class="booking-detail-value text-sm text-muted"><?= htmlspecialchars($b['ip'] ?? '—') ?></div>

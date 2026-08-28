@@ -1817,3 +1817,210 @@ main { flex: 1; }
     color: var(--gold-light, #dfc397);
     font-weight: 600;
 }
+
+/* ===== BOOKING PAGE (booking.php) ===== */
+.booking-page {
+    padding: 120px 0 80px;
+    min-height: 100vh;
+    background: var(--dark);
+}
+.booking-page-card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    border-radius: 24px;
+    background: var(--dark-card);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
+@media (min-width: 768px) {
+    .booking-page-card { padding: 48px 40px; }
+}
+
+.booking-page-header {
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+}
+.booking-page-title {
+    font-family: 'Forum', serif;
+    font-size: clamp(32px, 7vw, 48px);
+    letter-spacing: 0.04em;
+    margin: 8px 0 12px;
+    background: linear-gradient(135deg, var(--text), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+}
+.booking-page-title em {
+    font-style: italic;
+    color: var(--gold);
+    -webkit-text-fill-color: var(--gold);
+}
+.booking-page-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+@media (min-width: 768px) {
+    .booking-page-subtitle { font-size: 15px; }
+}
+.booking-page-subtitle strong {
+    color: var(--text);
+    font-weight: 600;
+}
+.booking-page-subtitle .dot {
+    margin: 0 6px;
+    color: var(--gold);
+}
+.booking-page-subtitle .heart {
+    color: #e8a5b3;
+    margin-left: 4px;
+}
+.booking-close {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    font-size: 24px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+.booking-close:hover {
+    background: var(--gold);
+    color: #0a0a0a;
+    border-color: var(--gold);
+}
+
+/* Locked field (read-only, prefilled) */
+.form-input-locked {
+    background: rgba(201, 169, 110, 0.08) !important;
+    border-color: rgba(201, 169, 110, 0.25) !important;
+    color: var(--text) !important;
+    font-weight: 600;
+    cursor: not-allowed;
+}
+.form-locked-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+}
+
+/* Centered booking intro (index.php) */
+.booking-info-list-centered {
+    display: inline-block;
+    text-align: left;
+    margin: 28px auto 0;
+}
+
+/* Contact method buttons */
+.contact-method-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+}
+@media (max-width: 480px) {
+    .contact-method-group { grid-template-columns: 1fr; }
+}
+.contact-method-btn {
+    padding: 12px 8px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+}
+@media (min-width: 768px) {
+    .contact-method-btn { font-size: 14px; padding: 14px 12px; }
+}
+.contact-method-btn:hover {
+    border-color: var(--gold);
+    color: var(--text);
+}
+.contact-method-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #0a0a0a;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(201, 169, 110, 0.3);
+}
+
+/* Updated discount summary (booking.php) */
+.discount-summary {
+    background: rgba(232, 165, 179, 0.05);
+    border: 1px solid rgba(232, 165, 179, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 12px;
+    animation: discount-appear 0.4s ease;
+}
+html.light .discount-summary {
+    background: rgba(232, 165, 179, 0.08);
+}
+.discount-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+.discount-summary-row .summary-label {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+.discount-summary-row .summary-value {
+    color: var(--text);
+    font-weight: 600;
+}
+.discount-row-discount .summary-discount {
+    color: #e5484d;
+}
+.discount-summary-divider {
+    height: 1px;
+    background: repeating-linear-gradient(to right, rgba(232, 165, 179, 0.3) 0, rgba(232, 165, 179, 0.3) 4px, transparent 4px, transparent 8px);
+    margin: 10px 0;
+}
+.discount-summary-total {
+    margin-bottom: 0;
+    padding-top: 4px;
+}
+.discount-summary-total .summary-label {
+    color: var(--text);
+    font-weight: 700;
+    font-size: 15px;
+}
+.discount-summary-total .summary-total {
+    color: #e8a5b3;
+    font-family: 'Forum', serif;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    font-weight: 400;
+}
+@media (min-width: 768px) {
+    .discount-summary-total .summary-total { font-size: 26px; }
+}
+
+/* Submit button override for booking page */
+.booking-submit {
+    width: 100%;
+    padding: 18px 32px;
+    font-size: 14px;
+    margin-top: 8px;
+}

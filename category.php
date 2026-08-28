@@ -84,7 +84,7 @@ require_once __DIR__ . '/includes/header.php';
                                 <?php endforeach; ?>
                             </ul>
 
-                            <a href="index.php#booking" class="btn-primary pricing-cta"><?= htmlspecialchars($pkg['name'] === 'Мінімальний' && $id === 'wedding' ? 'Перевірити вільну дату' : 'Забронювати дату') ?></a>
+                            <a href="booking.php?cat=<?= urlencode($id) ?>&pkg=<?= $i ?>" class="btn-primary pricing-cta">Забронювати цей пакет</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -136,7 +136,7 @@ require_once __DIR__ . '/includes/header.php';
             <h2 class="cta-title">Готові забронювати?</h2>
             <p class="cta-text">Заповніть коротку анкету — і я зв'яжуся з вами для підтвердження деталей.</p>
             <div class="cta-btns">
-                <a href="index.php#booking" class="btn-primary">Заповнити анкету</a>
+                <a href="booking.php?cat=<?= urlencode($id) ?>" class="btn-primary">Заповнити анкету</a>
                 <a href="index.php" class="btn-ghost">← Повернутись на головну</a>
             </div>
         </div>

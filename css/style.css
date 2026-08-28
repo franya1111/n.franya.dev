@@ -932,6 +932,43 @@ html.light .review-card {
 }
 .form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
 .form-textarea { resize: vertical; min-height: 80px; }
+
+/* ===== SELECT — стилізація випадаючого списку ===== */
+/* Браузер використовує системні кольори для <option>, тому вказуємо явно */
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9a96e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+.form-select option {
+    background: #141414;
+    color: #e8e4de;
+    padding: 10px;
+}
+html.light .form-select option {
+    background: #ffffff;
+    color: #1a1a1a;
+}
+/* Стилізація для select на сайті — без .form-select теж */
+select {
+    color: var(--text);
+    background-color: var(--dark-card);
+}
+select option {
+    background-color: #141414;
+    color: #e8e4de;
+}
+html.light select,
+html.light select option {
+    background-color: #ffffff;
+    color: #1a1a1a;
+}
 .form-row {
     display: grid;
     grid-template-columns: 1fr;

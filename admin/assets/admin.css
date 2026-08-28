@@ -347,6 +347,38 @@ html.light .form-input, html.light .form-textarea, html.light .form-select {
     border-color: var(--gold, #c9a96e);
     box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.15);
 }
+
+/* ===== SELECT — стилізація випадаючого списку ===== */
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9a96e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+.form-select option,
+.admin-body select option {
+    background: #141414;
+    color: #e8e4de;
+    padding: 10px;
+}
+html.light .form-select option,
+html.light .admin-body select option {
+    background: #ffffff;
+    color: #1a1a1a;
+}
+.admin-body select {
+    color: #e8e4de;
+    background-color: rgba(20, 20, 20, 0.95);
+}
+html.light .admin-body select {
+    color: #1a1a1a;
+    background-color: #ffffff;
+}
 .form-textarea { resize: vertical; min-height: 80px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }

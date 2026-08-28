@@ -23,9 +23,9 @@ foreach ($GALLERY as $g) {
 require_once __DIR__ . '/includes/header.php';
 ?>
 <main>
-    <section class="category-hero" style="min-height: 50vh;">
+    <section class="category-hero">
         <div class="category-hero-bg">
-            <img src="img/hero.jpg" alt="Галерея">
+            <img src="<?= htmlspecialchars(asset_url('img/hero.jpg')) ?>" alt="Галерея">
         </div>
         <div class="category-hero-content">
             <span class="category-hero-label">Портфоліо</span>

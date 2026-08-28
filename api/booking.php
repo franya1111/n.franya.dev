@@ -11,7 +11,7 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-require_once __DIR__ . '/../includes/data.php';
+require_once dirname(__DIR__) . '/includes/data.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

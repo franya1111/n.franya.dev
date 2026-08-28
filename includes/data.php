@@ -4,12 +4,21 @@
  * Якщо файла немає — повертає дефолтні порожні значення.
  */
 
-define('DATA_DIR', __DIR__ . '/../data');
+// Корінь проекту: 1 рівень вгору від includes/data.php
+// includes/data.php → includes/ → project_root/
+define('PROJECT_ROOT', dirname(__DIR__));
+define('DATA_DIR', PROJECT_ROOT . '/data');
+
+// Якщо папки data/ немає — спробуємо створити
+if (!is_dir(DATA_DIR)) {
+    @mkdir(DATA_DIR, 0777, true);
+}
 
 function load_json($name, $default) {
     $file = DATA_DIR . '/' . $name;
     if (!file_exists($file)) return $default;
-    $content = file_get_contents($file);
+    $content = @file_get_contents($file);
+    if ($content === false) return $default;
     $data = json_decode($content, true);
     return $data === null ? $default : $data;
 }
@@ -17,7 +26,7 @@ function load_json($name, $default) {
 function save_json($name, $data) {
     $file = DATA_DIR . '/' . $name;
     $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    return file_put_contents($file, $json) !== false;
+    return @file_put_contents($file, $json) !== false;
 }
 
 // === Категорії ===

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
+require_once dirname(__DIR__) . '/includes/auth.php';
 
 // Logout
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {

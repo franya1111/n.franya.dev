@@ -198,8 +198,7 @@ require_once __DIR__ . '/includes/header.php';
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <h3>Дякую!</h3>
-                    <p>Ваша заявка відкрита в Telegram. Натисніть кнопку «Надіслати», щоб я її отримав.</p>
-                    <button type="button" id="bookingAgain" class="btn-ghost">Заповнити ще раз</button>
+                    <p>Ваша заявка надіслана. Я зв'яжуся з вами найближчим часом для підтвердження дати та деталей зйомки.</p>
                 </div>
             </div>
         </div>

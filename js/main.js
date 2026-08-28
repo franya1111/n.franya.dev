@@ -181,11 +181,17 @@ if (bookingForm) {
             const result = await response.json();
 
             if (result.success) {
-                // Show success
+                // Show success — без кнопки повторного заповнення
                 const form = document.getElementById('bookingFormFields');
                 const success = document.getElementById('bookingSuccess');
                 if (form) form.style.display = 'none';
                 if (success) success.style.display = 'flex';
+                // Скролимо до success-блоку (щоб користувач його побачив на моб.)
+                if (success) {
+                    setTimeout(() => {
+                        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
             } else {
                 alert(result.message || 'Помилка відправки. Спробуйте пізніше або напишіть у Telegram.');
             }
@@ -199,14 +205,4 @@ if (bookingForm) {
             }
         }
     });
-
-    const againBtn = document.getElementById('bookingAgain');
-    if (againBtn) {
-        againBtn.addEventListener('click', () => {
-            const form = document.getElementById('bookingFormFields');
-            const success = document.getElementById('bookingSuccess');
-            if (form) { form.style.display = 'block'; bookingForm.reset(); }
-            if (success) success.style.display = 'none';
-        });
-    }
 }

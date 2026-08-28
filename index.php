@@ -55,17 +55,25 @@ require_once __DIR__ . '/includes/header.php';
             </div>
 
             <div class="services-grid">
-                <?php foreach ($CATEGORIES as $id => $cat): ?>
-                    <a href="category.php?id=<?= $id ?>" class="service-card reveal">
-                        <img src="<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
-                        <div class="service-card-overlay"></div>
-                        <div class="service-card-content">
-                            <h3><?= htmlspecialchars($cat['title']) ?></h3>
-                            <div class="service-card-line"></div>
-                            <span class="service-card-cta">Детальніше →</span>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
+                <?php if (empty($CATEGORIES)): ?>
+                    <div style="grid-column:1/-1;padding:48px 24px;text-align:center;color:var(--text-muted);border:1px dashed var(--glass-border);border-radius:12px;">
+                        <p style="font-size:14px;">⚠ Категорії не знайдені у <code>data/categories.json</code>.</p>
+                        <p style="font-size:13px;margin-top:8px;">Якщо щойно оновили код — виконайте на сервері:<br>
+                        <code style="background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:4px;">docker compose down -v &amp;&amp; docker compose up -d --build</code></p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($CATEGORIES as $id => $cat): ?>
+                        <a href="category.php?id=<?= $id ?>" class="service-card reveal">
+                            <img src="<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
+                            <div class="service-card-overlay"></div>
+                            <div class="service-card-content">
+                                <h3><?= htmlspecialchars($cat['title']) ?></h3>
+                                <div class="service-card-line"></div>
+                                <span class="service-card-cta">Детальніше →</span>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </section>

@@ -1452,3 +1452,77 @@ main { flex: 1; }
     transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ===== PUBLIC GALLERY ===== */
+.public-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 40px;
+}
+@media (min-width: 768px) {
+    .public-gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 56px;
+    }
+}
+.public-gallery-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: var(--dark-card);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+.public-gallery-item:hover {
+    border-color: rgba(201, 169, 110, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+.public-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+.public-gallery-item:hover img {
+    transform: scale(1.08);
+}
+.public-gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    text-align: center;
+}
+@media (hover: none) {
+    .public-gallery-overlay { opacity: 1; }
+}
+.public-gallery-item:hover .public-gallery-overlay {
+    opacity: 1;
+}
+.public-gallery-title {
+    font-family: 'Forum', serif;
+    font-size: 16px;
+    color: white;
+    margin-bottom: 4px;
+}
+@media (min-width: 768px) {
+    .public-gallery-title { font-size: 18px; }
+}
+.public-gallery-cat {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light, #dfc397);
+    font-weight: 600;
+}

@@ -557,3 +557,144 @@ html.light .package-card { background: rgba(0, 0, 0, 0.02); border-color: rgba(0
     accent-color: var(--gold, #c9a96e);
     cursor: pointer;
 }
+
+/* ===== IMAGE UPLOAD BLOCK ===== */
+.image-upload-block {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+html.light .image-upload-block {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.image-preview-wrapper {
+    width: 160px;
+    height: 120px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+}
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.image-preview-placeholder {
+    color: #9a9590;
+    font-size: 13px;
+    text-align: center;
+    padding: 8px;
+}
+.image-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 200px;
+}
+.file-input {
+    display: none;
+}
+.upload-status {
+    font-size: 13px;
+    color: #9a9590;
+    margin-top: 4px;
+}
+.image-upload-block .btn {
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+/* ===== GALLERY PREVIEW GRID (in categories) ===== */
+.gallery-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+.gallery-preview-item {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.gallery-preview-item img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+}
+.gallery-preview-path {
+    padding: 6px 8px;
+    font-size: 11px;
+    color: #9a9590;
+    word-break: break-all;
+    font-family: monospace;
+}
+
+/* ===== GALLERY ADMIN GRID ===== */
+.gallery-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+.gallery-admin-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+html.light .gallery-admin-item {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.gallery-admin-item:hover {
+    border-color: rgba(201, 169, 110, 0.4);
+    transform: translateY(-2px);
+}
+.gallery-admin-item img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+}
+.gallery-admin-info {
+    padding: 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.gallery-admin-title {
+    font-family: 'Forum', serif;
+    font-size: 16px;
+    color: var(--gold, #c9a96e);
+}
+.gallery-admin-cat {
+    margin: 4px 0;
+}
+.gallery-admin-path {
+    font-size: 11px;
+    word-break: break-all;
+    font-family: monospace;
+}

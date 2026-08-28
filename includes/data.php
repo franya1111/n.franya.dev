@@ -59,6 +59,9 @@ $SETTINGS = load_json('settings.json', [
 // === Бронювання ===
 $BOOKINGS = load_json('bookings.json', []);
 
+// === Галерея ===
+$GALLERY = load_json('gallery.json', []);
+
 // Допоміжна функція: отримати категорію за id
 function get_category($id) {
     global $CATEGORIES;

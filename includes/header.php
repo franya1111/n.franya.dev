@@ -43,6 +43,7 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
                 </div>
             </div>
             <a href="index.php#reviews" class="nav-link">Відгуки</a>
+            <a href="gallery.php" class="nav-link">Галерея</a>
             <a href="index.php#booking" class="nav-link">Бронювання</a>
             <a href="index.php#faq" class="nav-link">Питання</a>
             <a href="index.php#contacts" class="nav-link">Контакти</a>
@@ -80,6 +81,7 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
             </div>
         </div>
         <a href="index.php#reviews" class="mobile-nav-link">Відгуки</a>
+        <a href="gallery.php" class="mobile-nav-link">Галерея</a>
         <a href="index.php#booking" class="mobile-nav-link">Бронювання</a>
         <a href="index.php#faq" class="mobile-nav-link">Питання</a>
         <a href="index.php#contacts" class="mobile-nav-link">Контакти</a>

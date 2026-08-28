@@ -20,14 +20,16 @@
 set -e
 cd "$(dirname "$0")"
 
-echo "🔧 Виправляю права на data/..."
+echo "🔧 Виправляю права на data/ та uploads/..."
 
-# Створюємо папку якщо немає
+# Створюємо папки якщо немає
 mkdir -p data
+mkdir -p uploads
 
-# Даємо повні права на папку і файли (для Docker — щоб PHP міг писати)
-chmod 777 data
+# Даємо повні права на папки і файли (для Docker — щоб PHP міг писати)
+chmod 777 data uploads
 chmod 666 data/*.json 2>/dev/null || true
+chmod 666 uploads/* 2>/dev/null || true
 
 # Якщо admin.json не існує — створюємо порожній (щоб PHP міг перезаписати)
 if [ ! -f data/admin.json ] || [ ! -s data/admin.json ]; then
@@ -40,5 +42,7 @@ echo "✅ Готово!"
 echo ""
 echo "📁 Права встановлено:"
 ls -la data/ | head -10
+echo "---"
+ls -la uploads/ 2>/dev/null | head -5
 echo ""
 echo "💡 Тепер відкрий https://n.franya.dev/admin/ — має працювати."

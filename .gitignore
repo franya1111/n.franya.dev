@@ -14,9 +14,12 @@ Thumbs.db
 docker/data/
 
 # ТІЛЬКИ admin.json ігноруємо (тут пароль адміна)
-# Інші data/*.json (categories, reviews, faqs, bookings, settings) — в репо,
+# Інші data/*.json (categories, reviews, faqs, bookings, settings, gallery) — в репо,
 # щоб git pull оновлював контент одразу
 data/admin.json
+
+# Завантажені через адмінку фото — НЕ в репо (вони користувацькі)
+uploads/*
 
 # Logs
 *.log

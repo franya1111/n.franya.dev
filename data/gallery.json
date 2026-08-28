@@ -1,0 +1,18 @@
+[
+  {"id": "g1", "image": "img/hero.jpg", "title": "Весільна зйомка", "category": "wedding"},
+  {"id": "g2", "image": "img/about.jpg", "title": "Індивідуальна", "category": "individual"},
+  {"id": "g3", "image": "img/service-lovestory.jpg", "title": "Love Story", "category": "love-story"},
+  {"id": "g4", "image": "img/service-birthday.jpg", "title": "День народження", "category": "birthday"},
+  {"id": "g5", "image": "img/service-pregnancy.jpg", "title": "Вагітність", "category": "pregnancy"},
+  {"id": "g6", "image": "img/service-family.jpg", "title": "Сімейна", "category": "family"},
+  {"id": "g7", "image": "img/indiv-min.jpg", "title": "Індивідуальна", "category": "individual"},
+  {"id": "g8", "image": "img/indiv-stand.jpg", "title": "Індивідуальна", "category": "individual"},
+  {"id": "g9", "image": "img/indiv-max.jpg", "title": "Індивідуальна", "category": "individual"},
+  {"id": "g10", "image": "img/wed-min.jpg", "title": "Весільна", "category": "wedding"},
+  {"id": "g11", "image": "img/wed-stand.jpg", "title": "Весільна", "category": "wedding"},
+  {"id": "g12", "image": "img/wed-max.jpg", "title": "Весільна", "category": "wedding"},
+  {"id": "g13", "image": "img/ls-1.jpg", "title": "Love Story", "category": "love-story"},
+  {"id": "g14", "image": "img/bd-1.jpg", "title": "День народження", "category": "birthday"},
+  {"id": "g15", "image": "img/pg-1.jpg", "title": "Вагітність", "category": "pregnancy"},
+  {"id": "g16", "image": "img/fm-1.jpg", "title": "Сімейна", "category": "family"}
+]

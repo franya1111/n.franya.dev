@@ -6,7 +6,9 @@
 
 // Корінь проекту: 1 рівень вгору від includes/data.php
 // includes/data.php → includes/ → project_root/
-define('PROJECT_ROOT', dirname(__DIR__));
+if (!defined('PROJECT_ROOT')) {
+    define('PROJECT_ROOT', dirname(__DIR__));
+}
 define('DATA_DIR', PROJECT_ROOT . '/data');
 
 // Якщо папки data/ немає — спробуємо створити

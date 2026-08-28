@@ -10,8 +10,12 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Корінь проекту: 2 рівні вгору від admin/includes/auth.php
 // admin/includes/auth.php → admin/includes/ → admin/ → project_root/
-define('PROJECT_ROOT', dirname(__DIR__, 2));
-define('ADMIN_FILE', PROJECT_ROOT . '/data/admin.json');
+if (!defined('PROJECT_ROOT')) {
+    define('PROJECT_ROOT', dirname(__DIR__, 2));
+}
+if (!defined('ADMIN_FILE')) {
+    define('ADMIN_FILE', PROJECT_ROOT . '/data/admin.json');
+}
 
 /** Отримати запис адміна з data/admin.json */
 function get_admin_record() {

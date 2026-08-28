@@ -211,7 +211,7 @@ require_once __DIR__ . '/includes/header.php';
             <div class="faq-header reveal">
                 <span class="section-label">FAQ</span>
                 <h2 class="section-title">Питання та відповіді</h2>
-                <p class="section-subtitle">Зібрав найчастіші питання — якщо вашого тут немає, напишіть мені особисто.</p>
+                <p class="section-subtitle">Відповіді на те, про що запитують найчастіше. Якщо не знайшли потрібної відповіді — я завжди на зв'язку.</p>
             </div>
 
             <?php foreach ($FAQS as $faq): ?>

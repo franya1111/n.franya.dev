@@ -1,6 +1,6 @@
 # ===================================================================
 # krasnobaeva — photo & video
-# Docker Compose (PHP + Nginx — как у sanya.franya.dev)
+# Docker Compose (PHP + Nginx — як у sanya.franya.dev)
 # ===================================================================
 #
 # Схема:
@@ -20,6 +20,11 @@
 #        Forward Hostname:   krasnobaeva-web
 #        Forward Port:       80
 #        SSL → Request a new SSL Certificate + Force SSL
+#
+# ОНОВЛЕННЯ КОДУ БЕЗ ПЕРЕЗАГРУЗКИ DOCKER:
+#   cd ~/my-lamp-project/src/n.franya.dev
+#   git pull
+#   → Одразу видно на сайті (opcache.validate_timestamps=1)
 #
 # ===================================================================
 
@@ -48,14 +53,9 @@ services:
     container_name: krasnobaeva-php
     volumes:
       - ./:/var/www/html
-      - krasnobaeva-data:/var/www/html/data
     restart: unless-stopped
     networks:
       - krasnobaeva-internal
-
-volumes:
-  krasnobaeva-data:
-    driver: local
 
 networks:
   krasnobaeva-internal:

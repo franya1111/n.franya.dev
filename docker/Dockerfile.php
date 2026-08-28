@@ -6,29 +6,23 @@ WORKDIR /var/www/html
 RUN apk add --no-cache curl-dev \
     && docker-php-ext-install opcache pdo pdo_mysql curl
 
-# Налаштування PHP для production
+# Налаштування PHP для production + РЕАЛЬНОГО ЧАСУ (щоб git pull одразу працював)
 RUN echo "memory_limit=128M" >> /usr/local/etc/php/conf.d/custom.ini \
  && echo "upload_max_filesize=10M" >> /usr/local/etc/php/conf.d/custom.ini \
  && echo "post_max_size=10M" >> /usr/local/etc/php/conf.d/custom.ini \
- && echo "session.save_path=/tmp" >> /usr/local/etc/php/conf.d/custom.ini
+ && echo "session.save_path=/tmp" >> /usr/local/etc/php/conf.d/custom.ini \
+ && echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/custom.ini \
+ && echo "opcache.validate_timestamps=1" >> /usr/local/etc/php/conf.d/custom.ini \
+ && echo "opcache.revalidate_freq=0" >> /usr/local/etc/php/conf.d/custom.ini \
+ && echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/custom.ini \
+ && echo "opcache.max_accelerated_files=4000" >> /usr/local/etc/php/conf.d/custom.ini
 
-# Копіюємо seed-файли у /app/seed (НЕ перекривається volume)
+# Копіюємо seed-файли у /app/seed (НЕ перекривається монтуванням)
 COPY seed/ /app/seed/
 
-# Стартовий скрипт: гарантує права на запис + копіює seed при першому старті
-CMD ["sh", "-c", "\
-    mkdir -p /var/www/html/data && chmod 777 /var/www/html/data; \
-    for f in categories.json reviews.json faqs.json bookings.json settings.json admin.json; do \
-        if [ ! -f /var/www/html/data/$f ] || [ ! -s /var/www/html/data/$f ]; then \
-            if [ -f /app/seed/$f ]; then \
-                cp /app/seed/$f /var/www/html/data/$f; \
-            else \
-                case $f in \
-                    *.json) echo '[]' > /var/www/html/data/$f ;; \
-                esac; \
-            fi; \
-        fi; \
-        chmod 666 /var/www/html/data/$f 2>/dev/null; \
-    done; \
-    php-fpm \
-"]
+# Окремий стартовий скрипт (надійніше ніж inline CMD)
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php-fpm"]

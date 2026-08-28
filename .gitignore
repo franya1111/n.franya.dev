@@ -13,11 +13,10 @@ Thumbs.db
 # Docker data
 docker/data/
 
-# JSON data — НЕ комітимо (тут паролі адміна, заявки клієнтів, відгуки які змінюються через адмінку)
-# Крім data/seed/ — це початкові дані, які копіюються при першому старті
-data/*.json
-!data/seed/
-!data/seed/*.json
+# ТІЛЬКИ admin.json ігноруємо (тут пароль адміна)
+# Інші data/*.json (categories, reviews, faqs, bookings, settings) — в репо,
+# щоб git pull оновлював контент одразу
+data/admin.json
 
 # Logs
 *.log

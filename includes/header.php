@@ -13,7 +13,9 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
         ? htmlspecialchars(get_category($current_category)['title']) . ' — ' . htmlspecialchars($SETTINGS['brand_name'] ?? 'krasnobaeva')
         : htmlspecialchars(($SETTINGS['brand_name'] ?? 'krasnobaeva') . ' — ' . ($SETTINGS['brand_tagline'] ?? 'photo & video')) ?></title>
     <meta name="description" content="Весільний та сімейний фотограф і відеограф. Індивідуальні, сімейні та весільні зйомки.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=<?= filemtime('img/favicon-32.png') ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png?v=<?= filemtime('img/favicon-16.png') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png?v=<?= filemtime('img/apple-touch-icon.png') ?>">
     <link href="https://fonts.googleapis.com/css2?family=Forum&family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="css/style.css?v=<?= filemtime('css/style.css') ?>" rel="stylesheet">
 </head>
@@ -27,7 +29,10 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
 <!-- HEADER -->
 <header class="header" id="header">
     <div class="header-inner">
-        <a href="index.php" class="logo">krasnobaeva</a>
+        <a href="index.php" class="logo" aria-label="krasnobaeva — home">
+            <img src="img/logo-light.png?v=<?= filemtime('img/logo-light.png') ?>" alt="krasnobaeva" class="logo-img logo-light">
+            <img src="img/logo-dark.png?v=<?= filemtime('img/logo-dark.png') ?>" alt="krasnobaeva" class="logo-img logo-dark">
+        </a>
 
         <nav class="nav-desktop">
             <a href="index.php" class="nav-link">Головна</a>
@@ -36,7 +41,7 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
                 <div class="dropdown-menu">
                     <?php foreach ($CATEGORIES as $id => $cat): ?>
                         <a href="category.php?id=<?= $id ?>" class="dropdown-link">
-                            <img src="<?= $cat['image'] ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
+                            <img src="<?= htmlspecialchars(asset_url($cat['image'])) ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
                             <span><?= htmlspecialchars($cat['title']) ?></span>
                         </a>
                     <?php endforeach; ?>
@@ -62,7 +67,10 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
     <div class="mobile-header">
-        <a href="index.php" class="logo">krasnobaeva</a>
+        <a href="index.php" class="logo" aria-label="krasnobaeva — home">
+            <img src="img/logo-light.png?v=<?= filemtime('img/logo-light.png') ?>" alt="krasnobaeva" class="logo-img logo-light">
+            <img src="img/logo-dark.png?v=<?= filemtime('img/logo-dark.png') ?>" alt="krasnobaeva" class="logo-img logo-dark">
+        </a>
         <button class="mobile-close" id="mobileCloseBtn" aria-label="Close menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
@@ -74,7 +82,7 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
             <div class="mobile-services-grid">
                 <?php foreach ($CATEGORIES as $id => $cat): ?>
                     <a href="category.php?id=<?= $id ?>" class="mobile-service-card">
-                        <img src="<?= $cat['image'] ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
+                        <img src="<?= htmlspecialchars(asset_url($cat['image'])) ?>" alt="<?= htmlspecialchars($cat['title']) ?>">
                         <span><?= htmlspecialchars($cat['title']) ?></span>
                     </a>
                 <?php endforeach; ?>

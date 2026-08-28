@@ -103,10 +103,27 @@ $new_count = count(array_filter($BOOKINGS, fn($b) => ($b['status'] ?? 'new') ===
                         <div class="booking-detail-label">Категорія зйомки</div>
                         <div class="booking-detail-value"><?= htmlspecialchars($b['category'] ?: '—') ?></div>
                     </div>
+                    <?php if (!empty($b['package'])): ?>
+                    <div>
+                        <div class="booking-detail-label">Пакет</div>
+                        <div class="booking-detail-value"><?= htmlspecialchars($b['package']) ?></div>
+                    </div>
+                    <?php endif; ?>
                     <div>
                         <div class="booking-detail-label">Бажана дата</div>
                         <div class="booking-detail-value"><?= !empty($b['date']) ? date('d.m.Y', strtotime($b['date'])) : '—' ?></div>
                     </div>
+                    <?php if (!empty($b['is_regular'])): ?>
+                    <div>
+                        <div class="booking-detail-label">Постійний клієнт</div>
+                        <div class="booking-detail-value">
+                            <span class="badge badge-popular">⭐ −10%</span>
+                            <?php if (!empty($b['discount_info'])): ?>
+                                <div style="margin-top:4px;font-size:12px;color:var(--gold,#c9a96e);"><?= htmlspecialchars($b['discount_info']) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                     <div>
                         <div class="booking-detail-label">IP</div>
                         <div class="booking-detail-value text-sm text-muted"><?= htmlspecialchars($b['ip'] ?? '—') ?></div>

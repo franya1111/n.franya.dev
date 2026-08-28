@@ -167,18 +167,55 @@ require_once __DIR__ . '/includes/header.php';
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Категорія зйомки</label>
-                                <select name="category" class="form-select">
+                                <select name="category" id="bookingCategory" class="form-select">
                                     <option value="">Оберіть…</option>
                                     <?php foreach ($CATEGORIES as $id => $c): ?>
-                                        <option value="<?= htmlspecialchars($c['title']) ?>"><?= htmlspecialchars($c['title']) ?></option>
+                                        <option value="<?= htmlspecialchars($c['title']) ?>" data-cat-id="<?= htmlspecialchars($id) ?>"><?= htmlspecialchars($c['title']) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Бажана дата</label>
-                                <input type="date" name="date" class="form-input">
+                                <label class="form-label">Пакет</label>
+                                <select name="package" id="bookingPackage" class="form-select" disabled>
+                                    <option value="">Спочатку категорію…</option>
+                                </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Бажана дата</label>
+                            <input type="date" name="date" class="form-input">
+                        </div>
+
+                        <!-- Чекбокс "постійний клієнт" + розрахунок знижки -->
+                        <div class="booking-discount" id="bookingDiscountBlock">
+                            <label class="discount-checkbox">
+                                <input type="checkbox" name="is_regular" id="bookingIsRegular" value="1">
+                                <span class="discount-checkbox-box">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                </span>
+                                <span class="discount-checkbox-label">
+                                    Я постійний клієнт
+                                    <span class="discount-badge">−10%</span>
+                                </span>
+                            </label>
+                            <div class="discount-summary" id="discountSummary" style="display:none;">
+                                <div class="discount-summary-row">
+                                    <span>Пакет:</span>
+                                    <strong id="discountPackageName">—</strong>
+                                </div>
+                                <div class="discount-summary-row">
+                                    <span>Тривалість:</span>
+                                    <strong id="discountDuration">—</strong>
+                                </div>
+                                <div class="discount-summary-row discount-summary-price">
+                                    <span>Ціна:</span>
+                                    <span class="price-old" id="discountPriceOld">—</span>
+                                    <span class="price-arrow">→</span>
+                                    <span class="price-new" id="discountPriceNew">—</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="form-label">Повідомлення</label>
                             <textarea name="message" rows="3" placeholder="Описати побажання, локацію, кількість людей..." class="form-textarea"></textarea>
@@ -190,6 +227,11 @@ require_once __DIR__ . '/includes/header.php';
                         <p class="booking-form-hint">
                             Натискаючи кнопку, ви відкриєте Telegram із заповненим повідомленням
                         </p>
+
+                        <!-- Дані для JS — всі категорії з пакетами -->
+                        <script>
+                        window.CATEGORIES_DATA = <?= json_encode($CATEGORIES, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+                        </script>
                     </form>
                 </div>
 

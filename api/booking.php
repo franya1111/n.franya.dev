@@ -37,8 +37,11 @@ if (!is_array($input)) {
 $name = trim($input['name'] ?? '');
 $phone = trim($input['phone'] ?? '');
 $category = trim($input['category'] ?? '');
+$package = trim($input['package'] ?? '');
 $date = trim($input['date'] ?? '');
 $message = trim($input['message'] ?? '');
+$is_regular = !empty($input['is_regular']);
+$discount_info = trim($input['discount_info'] ?? '');
 
 // Валідація
 if (empty($name)) {
@@ -56,8 +59,11 @@ $booking = [
     'name' => mb_substr($name, 0, 100),
     'phone' => mb_substr($phone, 0, 30),
     'category' => mb_substr($category, 0, 100),
+    'package' => mb_substr($package, 0, 100),
     'date' => $date,
     'message' => mb_substr($message, 0, 2000),
+    'is_regular' => $is_regular,
+    'discount_info' => mb_substr($discount_info, 0, 200),
     'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
     'user_agent' => mb_substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 300),
     'status' => 'new',
@@ -85,7 +91,16 @@ if (!empty($bot_token) && !empty($chat_id)) {
     $text .= "Ім'я: {$booking['name']}\n";
     $text .= "Телефон: {$booking['phone']}\n";
     $text .= "Категорія: {$booking['category']}\n";
+    if (!empty($booking['package'])) {
+        $text .= "Пакет: {$booking['package']}\n";
+    }
     $text .= "Бажана дата: " . (!empty($booking['date']) ? $booking['date'] : '—') . "\n";
+    if ($booking['is_regular']) {
+        $text .= "⭐ Постійний клієнт: так\n";
+        if (!empty($booking['discount_info'])) {
+            $text .= "💰 Знижка: {$booking['discount_info']}\n";
+        }
+    }
     $text .= "Повідомлення: " . (!empty($booking['message']) ? $booking['message'] : '—') . "\n";
     $text .= "\nДата заявки: " . date('d.m.Y H:i');
 
@@ -105,7 +120,16 @@ if (!empty($email_to)) {
     $body .= "Ім'я: {$booking['name']}\n";
     $body .= "Телефон: {$booking['phone']}\n";
     $body .= "Категорія: {$booking['category']}\n";
+    if (!empty($booking['package'])) {
+        $body .= "Пакет: {$booking['package']}\n";
+    }
     $body .= "Бажана дата: " . (!empty($booking['date']) ? $booking['date'] : '—') . "\n";
+    if ($booking['is_regular']) {
+        $body .= "⭐ Постійний клієнт: так\n";
+        if (!empty($booking['discount_info'])) {
+            $body .= "💰 Знижка: {$booking['discount_info']}\n";
+        }
+    }
     $body .= "Повідомлення: " . (!empty($booking['message']) ? $booking['message'] : '—') . "\n\n";
     $body .= "Дата заявки: " . date('d.m.Y H:i:s') . "\n";
     $body .= "IP: {$booking['ip']}";

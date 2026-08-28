@@ -11,7 +11,10 @@
                         </a>
                     </div>
                     <p class="footer-copy">&copy; <?= date('Y') ?> <?= htmlspecialchars($SETTINGS['brand_name']) ?> <?= htmlspecialchars($SETTINGS['brand_tagline']) ?></p>
-                    <a href="index.php" class="footer-brand"><?= htmlspecialchars($SETTINGS['brand_name']) ?></a>
+                    <a href="index.php" class="footer-brand" aria-label="krasnobaeva — home">
+                        <img src="img/logo-light.png?v=<?= filemtime('img/logo-light.png') ?>" alt="krasnobaeva" class="footer-logo-img footer-logo-light">
+                        <img src="img/logo-dark.png?v=<?= filemtime('img/logo-dark.png') ?>" alt="krasnobaeva" class="footer-logo-img footer-logo-dark">
+                    </a>
                 </div>
             </div>
         </footer>

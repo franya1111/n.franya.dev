@@ -8,10 +8,6 @@ require_once __DIR__ . '/includes/header.php';
         <div class="hero-bg">
             <img src="img/hero.jpg" alt="Весільна фотографія">
         </div>
-        <div class="hero-decor">
-            <div class="hero-decor-circle"></div>
-            <div class="hero-decor-circle"></div>
-        </div>
         <div class="hero-content">
             <h1 class="hero-title">krasnobaeva</h1>
             <p class="hero-sub">photo &amp; video</p>

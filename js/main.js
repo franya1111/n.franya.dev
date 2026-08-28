@@ -151,33 +151,53 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 // ===== BOOKING FORM =====
 const bookingForm = document.getElementById('bookingForm');
 if (bookingForm) {
-    bookingForm.addEventListener('submit', (e) => {
+    const submitBtn = bookingForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+    bookingForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const formData = new FormData(bookingForm);
-        const name = formData.get('name') || '';
-        const phone = formData.get('phone') || '';
-        const category = formData.get('category') || '';
-        const date = formData.get('date') || '';
-        const message = formData.get('message') || '';
+        const payload = {
+            name: (formData.get('name') || '').trim(),
+            phone: (formData.get('phone') || '').trim(),
+            category: (formData.get('category') || '').trim(),
+            date: (formData.get('date') || '').trim(),
+            message: (formData.get('message') || '').trim(),
+        };
 
-        const text = [
-            'Нове бронювання',
-            '',
-            `Ім'я: ${name}`,
-            `Телефон: ${phone}`,
-            `Категорія: ${category}`,
-            `Дата: ${date}`,
-            `Повідомлення: ${message}`,
-        ].join('\n');
+        // Disable button + show loading
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Надсилаємо…';
+        }
 
-        const url = `https://t.me/krasnobaevaph?message=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        try {
+            const response = await fetch('api/booking.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const result = await response.json();
 
-        // Show success
-        const form = document.getElementById('bookingFormFields');
-        const success = document.getElementById('bookingSuccess');
-        if (form) form.style.display = 'none';
-        if (success) success.style.display = 'flex';
+            if (result.success) {
+                // Show success
+                const form = document.getElementById('bookingFormFields');
+                const success = document.getElementById('bookingSuccess');
+                if (form) form.style.display = 'none';
+                if (success) success.style.display = 'flex';
+            } else {
+                alert(result.message || 'Помилка відправки. Спробуйте пізніше або напишіть у Telegram.');
+            }
+        } catch (err) {
+            console.error('Booking submit error:', err);
+            alert('Не вдалося з\'єднатись з сервером. Перевірте інтернет та спробуйте ще раз.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        }
     });
 
     const againBtn = document.getElementById('bookingAgain');

@@ -1,0 +1,4 @@
+{
+  "username": "admin",
+  "password_hash": "$2y$10$placeholder_hash_will_be_replaced_on_first_login_setup"
+}

@@ -10,8 +10,8 @@ $page = basename($_SERVER['SCRIPT_NAME'], '.php'); // 'index' або 'category'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page === 'category' && get_category($current_category)
-        ? htmlspecialchars(get_category($current_category)['title']) . ' — krasnobaeva'
-        : 'krasnobaeva — photo & video' ?></title>
+        ? htmlspecialchars(get_category($current_category)['title']) . ' — ' . htmlspecialchars($SETTINGS['brand_name'] ?? 'krasnobaeva')
+        : htmlspecialchars(($SETTINGS['brand_name'] ?? 'krasnobaeva') . ' — ' . ($SETTINGS['brand_tagline'] ?? 'photo & video')) ?></title>
     <meta name="description" content="Весільний та сімейний фотограф і відеограф. Індивідуальні, сімейні та весільні зйомки.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Forum&family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">

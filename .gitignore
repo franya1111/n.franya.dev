@@ -10,8 +10,14 @@ Thumbs.db
 .env
 .env.local
 
-# Docker data (if any volumes are mounted locally)
+# Docker data
 docker/data/
+
+# JSON data — НЕ комітимо (тут паролі адміна, заявки клієнтів, відгуки які змінюються через адмінку)
+# Крім data/seed/ — це початкові дані, які копіюються при першому старті
+data/*.json
+!data/seed/
+!data/seed/*.json
 
 # Logs
 *.log

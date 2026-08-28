@@ -48,9 +48,14 @@ services:
     container_name: krasnobaeva-php
     volumes:
       - ./:/var/www/html
+      - krasnobaeva-data:/var/www/html/data
     restart: unless-stopped
     networks:
       - krasnobaeva-internal
+
+volumes:
+  krasnobaeva-data:
+    driver: local
 
 networks:
   krasnobaeva-internal:

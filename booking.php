@@ -33,7 +33,7 @@ require_once __DIR__ . '/includes/header.php';
                 <!-- Заголовок -->
                 <div class="booking-page-header">
                     <span class="section-label">Анкета бронювання</span>
-                    <h1 class="booking-page-title">Забронувати <em>зйомку</em></h1>
+                    <h1 class="booking-page-title"><?= htmlspecialchars($SETTINGS['booking']['title'] ?? 'Забронувати зйомку') ?></h1>
                     <?php if ($pre_category_data): ?>
                         <p class="booking-page-subtitle">
                             Ви бронюєте:
@@ -45,7 +45,7 @@ require_once __DIR__ . '/includes/header.php';
                             <?php endif; ?>
                         </p>
                     <?php else: ?>
-                        <p class="booking-page-subtitle">Заповніть анкету — і я зв'яжуся з вами найближчим часом.</p>
+                        <p class="booking-page-subtitle"><?= htmlspecialchars($SETTINGS['booking']['subtitle_default'] ?? 'Заповніть анкету — і я зв\'яжуся з вами найближчим часом.') ?></p>
                     <?php endif; ?>
                     <a href="javascript:history.back()" class="booking-close" aria-label="Закрити">×</a>
                 </div>
@@ -189,7 +189,7 @@ require_once __DIR__ . '/includes/header.php';
                     </div>
 
                     <button type="submit" class="btn-primary booking-submit">
-                        Надіслати запит 💌
+                        <?= htmlspecialchars($SETTINGS['booking']['submit_btn_text'] ?? 'Надіслати запит 💌') ?>
                     </button>
 
                     <!-- Дані для JS -->
@@ -206,8 +206,8 @@ require_once __DIR__ . '/includes/header.php';
                     <div class="form-success-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                    <h3>Дякую! 🌸</h3>
-                    <p>Ваша заявка надіслана. Я зв'яжуся з вами найближчим часом для підтвердження дати та деталей зйомки.</p>
+                    <h3><?= htmlspecialchars($SETTINGS['booking']['success_title'] ?? 'Дякую! 🌸') ?></h3>
+                    <p><?= htmlspecialchars($SETTINGS['booking']['success_text'] ?? 'Ваша заявка надіслана. Я зв\'яжуся з вами найближчим часом для підтвердження дати та деталей зйомки.') ?></p>
                 </div>
             </div>
         </div>

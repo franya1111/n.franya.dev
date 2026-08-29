@@ -47,6 +47,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setup_admin($admin['username'], $new);
             $success = '✅ Пароль змінено';
         }
+    } elseif ($section === 'booking') {
+        if (!isset($SETTINGS['booking']) || !is_array($SETTINGS['booking'])) {
+            $SETTINGS['booking'] = [];
+        }
+        $SETTINGS['booking']['title'] = trim($_POST['booking_title'] ?? 'Забронувати зйомку');
+        $SETTINGS['booking']['subtitle_default'] = trim($_POST['booking_subtitle_default'] ?? '');
+        $SETTINGS['booking']['intro_text'] = trim($_POST['booking_intro_text'] ?? '');
+
+        $benefits_raw = $_POST['booking_benefits'] ?? '';
+        $benefits = array_values(array_filter(array_map('trim', explode("\n", str_replace("\r\n", "\n", $benefits_raw)))));
+        $SETTINGS['booking']['benefits'] = $benefits;
+
+        $SETTINGS['booking']['success_title'] = trim($_POST['booking_success_title'] ?? 'Дякую! 🌸');
+        $SETTINGS['booking']['success_text'] = trim($_POST['booking_success_text'] ?? '');
+        $SETTINGS['booking']['submit_btn_text'] = trim($_POST['booking_submit_btn_text'] ?? 'Надіслати запит 💌');
+
+        if (save_json('settings.json', $SETTINGS)) {
+            $success = '✅ Тексти анкети бронювання збережено';
+        } else { $error = 'Помилка збереження'; }
     }
     // Refresh
     $SETTINGS = load_json('settings.json', []);
@@ -147,6 +166,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-ghost">📲 Надіслати тестове повідомлення</button>
         </form>
     <?php endif; ?>
+</div>
+
+<!-- Тексти анкети бронювання -->
+<div class="card">
+    <h2 class="card-title mb-4">📝 Тексти анкети бронювання</h2>
+    <p class="form-help mb-4">Ці тексти бачить клієнтка на сторінці бронювання та в блоці на головній. Змінюйте текст під свій стиль — зміни одразу з'являться на сайті.</p>
+    <form method="post">
+        <input type="hidden" name="section" value="booking">
+        <div class="form-group">
+            <label class="form-label">Заголовок</label>
+            <input type="text" name="booking_title" class="form-input" value="<?= htmlspecialchars($SETTINGS['booking']['title'] ?? 'Забронувати зйомку') ?>">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Підзаголовок (коли клієнт відкрив анкету без категорії)</label>
+            <textarea name="booking_subtitle_default" rows="2" class="form-textarea"><?= htmlspecialchars($SETTINGS['booking']['subtitle_default'] ?? '') ?></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Описовий текст (в блоці на головній)</label>
+            <textarea name="booking_intro_text" rows="3" class="form-textarea"><?= htmlspecialchars($SETTINGS['booking']['intro_text'] ?? '') ?></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Переваги (по одній на рядок)</label>
+            <textarea name="booking_benefits" rows="4" class="form-textarea"><?= htmlspecialchars(implode("\n", $SETTINGS['booking']['benefits'] ?? [])) ?></textarea>
+            <p class="form-help">Кожен рядок буде показаний з золотою галочкою ✓.</p>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Текст кнопки відправки</label>
+                <input type="text" name="booking_submit_btn_text" class="form-input" value="<?= htmlspecialchars($SETTINGS['booking']['submit_btn_text'] ?? 'Надіслати запит 💌') ?>">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Заголовок після відправки</label>
+                <input type="text" name="booking_success_title" class="form-input" value="<?= htmlspecialchars($SETTINGS['booking']['success_title'] ?? 'Дякую! 🌸') ?>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Текст після відправки</label>
+            <textarea name="booking_success_text" rows="3" class="form-textarea"><?= htmlspecialchars($SETTINGS['booking']['success_text'] ?? '') ?></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">💾 Зберегти тексти анкети</button>
+    </form>
 </div>
 
 <!-- Зміна пароля -->

@@ -125,32 +125,22 @@ require_once __DIR__ . '/includes/header.php';
         <div class="booking-card reveal">
             <div class="booking-intro" style="text-align:center; max-width:680px; margin:0 auto;">
                 <span class="section-label">Анкета бронювання</span>
-                <h2 class="section-title">Забронувати зйомку</h2>
+                <h2 class="section-title"><?= htmlspecialchars($SETTINGS['booking']['title'] ?? 'Забронувати зйомку') ?></h2>
                 <p class="booking-intro-text">
-                    Заповніть коротку анкету — це займе лише кілька хвилин. Я перевірю вільність дати, зв'яжуся з вами та допоможу обрати найкращий формат зйомки саме для вас.
+                    <?= htmlspecialchars($SETTINGS['booking']['intro_text'] ?? 'Заповніть коротку анкету — це займе лише кілька хвилин. Я перевірю вільність дати, зв\'яжуся з вами та допоможу обрати найкращий формат зйомки саме для вас.') ?>
                 </p>
                 <ul class="booking-info-list booking-info-list-centered">
-                    <li>
-                        <span class="check-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        </span>
-                        <span>Відповім протягом 15 хвилин</span>
-                    </li>
-                    <li>
-                        <span class="check-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        </span>
-                        <span>Допоможу обрати оптимальний формат</span>
-                    </li>
-                    <li>
-                        <span class="check-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                        </span>
-                        <span>Підкажу, як підготуватися до зйомки без зайвих хвилювань</span>
-                    </li>
+                    <?php foreach (($SETTINGS['booking']['benefits'] ?? []) as $benefit): ?>
+                        <li>
+                            <span class="check-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                            <span><?= htmlspecialchars($benefit) ?></span>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
                 <a href="booking.php" class="btn-primary" style="margin-top:24px; padding:18px 36px; font-size:13px;">
-                    Заповнити анкету
+                    <?= htmlspecialchars($SETTINGS['booking']['submit_btn_text'] ?? 'Заповнити анкету') ?>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
             </div>

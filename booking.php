@@ -23,6 +23,9 @@ $participants_options = [
     'birthday'   => ['1–5 человек', '6–10 человек', '11–20 человек', 'более 20 человек'],
 ];
 
+// Сьогодні для min date
+$today = date('Y-m-d');
+
 $page_title = 'Анкета бронювання';
 require_once __DIR__ . '/includes/header.php';
 ?>
@@ -47,21 +50,23 @@ require_once __DIR__ . '/includes/header.php';
                     <?php else: ?>
                         <p class="booking-page-subtitle"><?= htmlspecialchars($SETTINGS['booking']['subtitle_default'] ?? 'Заповніть анкету — і я зв\'яжуся з вами найближчим часом.') ?></p>
                     <?php endif; ?>
-                    <a href="javascript:history.back()" class="booking-close" aria-label="Закрити">×</a>
+                    <a href="index.php" class="booking-close" aria-label="На головну">×</a>
                 </div>
 
                 <!-- Форма -->
-                <form id="bookingForm" method="post" class="booking-form">
+                <form id="bookingForm" method="post" class="booking-form" novalidate>
                     <!-- Ім'я -->
                     <div class="form-group">
-                        <label class="form-label">Ім'я клієнта *</label>
-                        <input type="text" name="name" required placeholder="Як до вас звертатись?" class="form-input">
+                        <label class="form-label" for="bookingName">Ім'я клієнта *</label>
+                        <input type="text" id="bookingName" name="name" required maxlength="100"
+                               placeholder="Як до вас звертатись?" class="form-input"
+                               autocomplete="name">
                     </div>
 
                     <!-- Вид зйомки + Пакет (2 колонки) -->
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Вид зйомки</label>
+                            <label class="form-label" for="bookingCategory">Вид зйомки *</label>
                             <?php if ($pre_category_data): ?>
                                 <input type="text" value="<?= htmlspecialchars($pre_category_data['title']) ?>" class="form-input form-input-locked" readonly>
                                 <input type="hidden" name="category" value="<?= htmlspecialchars($pre_category_data['title']) ?>">
@@ -77,24 +82,26 @@ require_once __DIR__ . '/includes/header.php';
                             <?php endif; ?>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Вибір пакета</label>
+                            <label class="form-label" for="bookingPackage">Вибір пакета</label>
                             <?php if ($pre_package_data): ?>
                                 <input type="text" value="<?= htmlspecialchars($pre_package_data['name']) ?>" class="form-input form-input-locked" readonly>
                                 <input type="hidden" name="package" value="<?= htmlspecialchars($pre_package_data['name']) ?>">
                                 <input type="hidden" name="package_index" value="<?= $pre_pkg ?>">
                                 <input type="hidden" name="package_price" value="<?= htmlspecialchars($pre_package_data['price']) ?>">
                                 <input type="hidden" name="package_duration" value="<?= htmlspecialchars($pre_package_data['duration']) ?>">
+                                <span class="form-locked-hint">🔒 Замкнено (визначається пакетом)</span>
+                            <?php elseif ($pre_category_data): ?>
+                                <select name="package" id="bookingPackage" class="form-select">
+                                    <option value="">Оберіть пакет…</option>
+                                    <?php foreach ($pre_category_data['packages'] as $i => $pkg): ?>
+                                        <option value="<?= htmlspecialchars($pkg['name']) ?>" data-price="<?= htmlspecialchars($pkg['price']) ?>" data-duration="<?= htmlspecialchars($pkg['duration']) ?>">
+                                            <?= htmlspecialchars($pkg['name']) ?> — <?= htmlspecialchars($pkg['price']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             <?php else: ?>
-                                <select name="package" id="bookingPackage" class="form-select" <?= $pre_category_data ? '' : 'disabled' ?>>
-                                    <?php if ($pre_category_data): ?>
-                                        <?php foreach ($pre_category_data['packages'] as $i => $pkg): ?>
-                                            <option value="<?= htmlspecialchars($pkg['name']) ?>" data-price="<?= htmlspecialchars($pkg['price']) ?>" data-duration="<?= htmlspecialchars($pkg['duration']) ?>">
-                                                <?= htmlspecialchars($pkg['name']) ?> — <?= htmlspecialchars($pkg['price']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <option value="">Спочатку вид зйомки…</option>
-                                    <?php endif; ?>
+                                <select name="package" id="bookingPackage" class="form-select" disabled>
+                                    <option value="">Спочатку вид зйомки…</option>
                                 </select>
                             <?php endif; ?>
                         </div>
@@ -102,29 +109,41 @@ require_once __DIR__ . '/includes/header.php';
 
                     <!-- Кількість учасників -->
                     <div class="form-group">
-                        <label class="form-label">Кількість учасників</label>
-                        <select name="participants" id="bookingParticipants" class="form-select" required>
-                            <option value="">Оберіть кількість…</option>
-                            <?php
-                            $current_cat_id = $pre_cat;
-                            $opts = $participants_options[$current_cat_id] ?? [];
-                            foreach ($opts as $opt):
-                            ?>
-                                <option value="<?= htmlspecialchars($opt) ?>"><?= htmlspecialchars($opt) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <p class="form-help">Враховуйте всіх учасників — дорослих та дітей.</p>
+                        <label class="form-label" for="bookingParticipants">Кількість учасників *</label>
+                        <?php if ($pre_category_data): ?>
+                            <select name="participants" id="bookingParticipants" class="form-select" required>
+                                <option value="">Оберіть кількість…</option>
+                                <?php foreach ($participants_options[$pre_cat] ?? [] as $opt): ?>
+                                    <option value="<?= htmlspecialchars($opt) ?>"><?= htmlspecialchars($opt) ?></option>
+                                <?php endforeach; ?>
+                                <option value="__other__">Інше (ввести вручну)…</option>
+                            </select>
+                            <input type="text" name="participants_other" id="bookingParticipantsOther"
+                                   class="form-input participants-other-input"
+                                   placeholder="Введіть кількість (напр.: 7 осіб)"
+                                   style="display:none; margin-top:8px;">
+                            <p class="form-help">Враховуйте всіх учасників — дорослих та дітей.</p>
+                        <?php else: ?>
+                            <select name="participants" id="bookingParticipants" class="form-select" disabled required>
+                                <option value="">Спочатку вид зйомки…</option>
+                            </select>
+                            <input type="text" name="participants_other" id="bookingParticipantsOther"
+                                   class="form-input participants-other-input"
+                                   placeholder="Введіть кількість"
+                                   style="display:none; margin-top:8px;">
+                            <p class="form-help">Виберіть спочатку вид зйомки — варіанти кількості залежать від нього.</p>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Дата + Час (2 колонки) -->
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Бажана дата</label>
-                            <input type="date" name="date" class="form-input">
+                            <label class="form-label" for="bookingDate">Бажана дата</label>
+                            <input type="date" id="bookingDate" name="date" class="form-input" min="<?= $today ?>">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Бажаний час</label>
-                            <input type="time" name="time" class="form-input">
+                            <label class="form-label" for="bookingTime">Бажаний час</label>
+                            <input type="time" id="bookingTime" name="time" class="form-input">
                         </div>
                     </div>
 
@@ -161,7 +180,7 @@ require_once __DIR__ . '/includes/header.php';
 
                     <!-- Спосіб зв'язку -->
                     <div class="form-group">
-                        <label class="form-label">Переважний спосіб зв'язку</label>
+                        <label class="form-label">Переважний спосіб зв'язку *</label>
                         <div class="contact-method-group" role="radiogroup">
                             <button type="button" class="contact-method-btn active" data-method="phone" role="radio" aria-checked="true">
                                 📞 Телефон
@@ -178,14 +197,18 @@ require_once __DIR__ . '/includes/header.php';
 
                     <!-- Контактні дані (динамічне поле) -->
                     <div class="form-group">
-                        <label class="form-label" id="contactLabel">Номер телефону *</label>
-                        <input type="tel" name="contact_value" id="contactValue" required placeholder="+380 __ ___ __ __" class="form-input">
+                        <label class="form-label" for="contactValue" id="contactLabel">Номер телефону *</label>
+                        <input type="tel" name="contact_value" id="contactValue" required
+                               placeholder="+380 __ ___ __ __" class="form-input"
+                               autocomplete="tel" maxlength="50">
+                        <p class="form-help" id="contactHelp">Формат: +380 50 123 45 67</p>
                     </div>
 
                     <!-- Побажання -->
                     <div class="form-group">
-                        <label class="form-label">Побажання до зйомки</label>
-                        <textarea name="message" rows="3" placeholder="Розкажіть про вашу ідею..." class="form-textarea"></textarea>
+                        <label class="form-label" for="bookingMessage">Побажання до зйомки</label>
+                        <textarea name="message" id="bookingMessage" rows="3" maxlength="2000"
+                                  placeholder="Розкажіть про вашу ідею..." class="form-textarea"></textarea>
                     </div>
 
                     <button type="submit" class="btn-primary booking-submit">

@@ -51,9 +51,57 @@ if (empty($name)) {
     echo json_encode(['success' => false, 'message' => 'Введіть ім\'я']);
     exit;
 }
+if (empty($category)) {
+    echo json_encode(['success' => false, 'message' => 'Оберіть вид зйомки']);
+    exit;
+}
+if (empty($participants)) {
+    echo json_encode(['success' => false, 'message' => 'Оберіть кількість учасників']);
+    exit;
+}
 if (empty($contact_value)) {
     echo json_encode(['success' => false, 'message' => 'Введіть контактні дані']);
     exit;
+}
+// Валідація контактів за методом
+$valid_methods = ['phone', 'telegram', 'instagram'];
+if (!in_array($contact_method, $valid_methods, true)) {
+    $contact_method = 'phone';
+}
+$contact_errors = [
+    'phone' => 'Введіть коректний номер телефону (7-20 цифр, можуть бути +, пробіли, дефіси)',
+    'telegram' => 'Введіть коректний нік Telegram (4-32 символи: @, буквы, цифры, _)',
+    'instagram' => 'Введіть коректний нік Instagram (1-30 символов: @, буквы, цифры, точки, _)',
+];
+$contact_patterns = [
+    'phone'    => '/^[+]?[0-9\s\-()]{7,20}$/',
+    'telegram' => '/^@?[a-zA-Z0-9_]{4,32}$/',
+    'instagram'=> '/^@?[a-zA-Z0-9._]{1,30}$/',
+];
+if (!preg_match($contact_patterns[$contact_method], $contact_value)) {
+    echo json_encode(['success' => false, 'message' => $contact_errors[$contact_method]]);
+    exit;
+}
+// Валідація дати (не в минулому)
+if (!empty($date)) {
+    $d = DateTime::createFromFormat('Y-m-d', $date);
+    if (!$d || $d->format('Y-m-d') !== $date) {
+        echo json_encode(['success' => false, 'message' => 'Невірний формат дати']);
+        exit;
+    }
+    $today_dt = new DateTime('today');
+    if ($d < $today_dt) {
+        echo json_encode(['success' => false, 'message' => 'Дата не може бути в минулому']);
+        exit;
+    }
+}
+// Валідація часу
+if (!empty($time)) {
+    $t = DateTime::createFromFormat('H:i', $time);
+    if (!$t || $t->format('H:i') !== $time) {
+        echo json_encode(['success' => false, 'message' => 'Невірний формат часу']);
+        exit;
+    }
 }
 
 // Створити запис

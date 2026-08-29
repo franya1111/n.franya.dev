@@ -158,6 +158,7 @@ if (bookingForm) {
     const categorySelect = document.getElementById('bookingCategory');
     const packageSelect = document.getElementById('bookingPackage');
     const participantsSelect = document.getElementById('bookingParticipants');
+    const participantsOtherInput = document.getElementById('bookingParticipantsOther');
     const isRegularCheckbox = document.getElementById('bookingIsRegular');
     const discountSummary = document.getElementById('discountSummary');
     const discountPackageRow = document.getElementById('discountPackageRow');
@@ -167,17 +168,41 @@ if (bookingForm) {
 
     const CATEGORIES_DATA = window.CATEGORIES_DATA || {};
     const PARTICIPANTS_OPTIONS = window.PARTICIPANTS_OPTIONS || {};
+    const PRE_CAT = window.PRE_CAT || '';
+    const PRE_PKG = window.PRE_PKG ?? -1;
 
     // === Спосіб зв'язку ===
     const contactMethodBtns = document.querySelectorAll('.contact-method-btn');
     const contactMethodInput = document.getElementById('contactMethod');
     const contactValueInput = document.getElementById('contactValue');
     const contactLabel = document.getElementById('contactLabel');
+    const contactHelp = document.getElementById('contactHelp');
 
     const contactConfig = {
-        phone:    { label: 'Номер телефону *', placeholder: '+380 __ ___ __ __', type: 'tel' },
-        telegram: { label: 'Ваш нік в Telegram *', placeholder: '@username', type: 'text' },
-        instagram:{ label: 'Ваш нік в Instagram *', placeholder: '@username', type: 'text' },
+        phone:    {
+            label: 'Номер телефону *',
+            placeholder: '+380 50 123 45 67',
+            type: 'tel',
+            help: 'Формат: +380 50 123 45 67',
+            pattern: '^[+]?[0-9\\s\\-()]{7,20}$',
+            validationMsg: 'Введіть коректний номер телефону',
+        },
+        telegram: {
+            label: 'Ваш нік в Telegram *',
+            placeholder: '@username',
+            type: 'text',
+            help: 'Без пробілів, напр.: @krasnobaeva',
+            pattern: '^@?[a-zA-Z0-9_]{4,32}$',
+            validationMsg: 'Введіть коректний нік Telegram (4-32 символи, @/_/літери/цифри)',
+        },
+        instagram:{
+            label: 'Ваш нік в Instagram *',
+            placeholder: '@username',
+            type: 'text',
+            help: 'Без пробілів, напр.: @krasnobaeva.ph',
+            pattern: '^@?[a-zA-Z0-9._]{1,30}$',
+            validationMsg: 'Введіть коректний нік Instagram (1-30 символи, @/._/літери/цифри)',
+        },
     };
 
     contactMethodBtns.forEach(btn => {
@@ -196,7 +221,18 @@ if (bookingForm) {
                 contactValueInput.type = cfg.type;
                 contactValueInput.placeholder = cfg.placeholder;
                 contactValueInput.value = '';
+                contactValueInput.setAttribute('pattern', cfg.pattern || '');
+                contactValueInput.setAttribute('title', cfg.validationMsg || '');
+                contactValueInput.removeAttribute('maxlength');
+                if (method === 'phone') {
+                    contactValueInput.setAttribute('maxlength', '20');
+                    contactValueInput.setAttribute('autocomplete', 'tel');
+                } else {
+                    contactValueInput.setAttribute('maxlength', '32');
+                    contactValueInput.removeAttribute('autocomplete');
+                }
             }
+            if (contactHelp) contactHelp.textContent = cfg.help;
         });
     });
 
@@ -211,29 +247,31 @@ if (bookingForm) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' грн';
     }
 
-    // === Оновити пакети при зміні категорії (якщо категорія не замкнена) ===
+    // === Оновити пакети при зміні категорії ===
     function updatePackages() {
-        if (!categorySelect || !packageSelect) return;
-        if (categorySelect.disabled) return;
+        if (!categorySelect) return;
+
         const selected = categorySelect.options[categorySelect.selectedIndex];
         const catId = selected ? selected.getAttribute('data-cat-id') : null;
         const cat = catId ? CATEGORIES_DATA[catId] : null;
 
-        packageSelect.innerHTML = '';
-        if (!cat || !cat.packages || !cat.packages.length) {
-            packageSelect.disabled = true;
-            packageSelect.innerHTML = '<option value="">Спочатку вид зйомки…</option>';
-        } else {
-            packageSelect.disabled = false;
-            packageSelect.innerHTML = '<option value="">Оберіть пакет…</option>';
-            cat.packages.forEach((pkg, i) => {
-                const opt = document.createElement('option');
-                opt.value = pkg.name;
-                opt.textContent = `${pkg.name} — ${pkg.price} (${pkg.duration})`;
-                opt.setAttribute('data-price', pkg.price);
-                opt.setAttribute('data-duration', pkg.duration);
-                packageSelect.appendChild(opt);
-            });
+        if (packageSelect) {
+            packageSelect.innerHTML = '';
+            if (!cat || !cat.packages || !cat.packages.length) {
+                packageSelect.disabled = true;
+                packageSelect.innerHTML = '<option value="">Спочатку вид зйомки…</option>';
+            } else {
+                packageSelect.disabled = false;
+                packageSelect.innerHTML = '<option value="">Оберіть пакет…</option>';
+                cat.packages.forEach((pkg, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = pkg.name;
+                    opt.textContent = `${pkg.name} — ${pkg.price} (${pkg.duration})`;
+                    opt.setAttribute('data-price', pkg.price);
+                    opt.setAttribute('data-duration', pkg.duration);
+                    packageSelect.appendChild(opt);
+                });
+            }
         }
         updateParticipants(catId);
         updateDiscount();
@@ -244,6 +282,8 @@ if (bookingForm) {
         if (!participantsSelect) return;
         const opts = PARTICIPANTS_OPTIONS[catId] || [];
         const currentValue = participantsSelect.value;
+
+        participantsSelect.disabled = false;
         participantsSelect.innerHTML = '<option value="">Оберіть кількість…</option>';
         opts.forEach(opt => {
             const o = document.createElement('option');
@@ -251,9 +291,44 @@ if (bookingForm) {
             o.textContent = opt;
             participantsSelect.appendChild(o);
         });
+
+        // Додаємо опцію "Інше"
+        const otherOpt = document.createElement('option');
+        otherOpt.value = '__other__';
+        otherOpt.textContent = 'Інше (ввести вручну)…';
+        participantsSelect.appendChild(otherOpt);
+
         if (opts.indexOf(currentValue) !== -1) {
             participantsSelect.value = currentValue;
+        } else {
+            participantsSelect.value = '';
         }
+        hideParticipantsOther();
+    }
+
+    // === Показати/сховати текстове поле "Інше" ===
+    function showParticipantsOther() {
+        if (participantsOtherInput) {
+            participantsOtherInput.style.display = 'block';
+            participantsOtherInput.required = true;
+            participantsOtherInput.focus();
+        }
+    }
+    function hideParticipantsOther() {
+        if (participantsOtherInput) {
+            participantsOtherInput.style.display = 'none';
+            participantsOtherInput.required = false;
+            participantsOtherInput.value = '';
+        }
+    }
+    if (participantsSelect) {
+        participantsSelect.addEventListener('change', () => {
+            if (participantsSelect.value === '__other__') {
+                showParticipantsOther();
+            } else {
+                hideParticipantsOther();
+            }
+        });
     }
 
     // === Оновити блок розрахунку знижки ===
@@ -265,12 +340,28 @@ if (bookingForm) {
 
         // Отримуємо вибраний пакет
         let selectedPkg = null;
-        if (packageSelect) {
+        if (packageSelect && !packageSelect.disabled) {
             selectedPkg = packageSelect.options[packageSelect.selectedIndex];
         }
-        const priceStr = selectedPkg ? selectedPkg.getAttribute('data-price') : '';
-        const durationStr = selectedPkg ? selectedPkg.getAttribute('data-duration') : '';
-        const pkgName = selectedPkg ? selectedPkg.value : '';
+
+        // Якщо пакет предзаповнений (hidden input), шукаємо ціну там
+        let priceStr = '';
+        let durationStr = '';
+        let pkgName = '';
+
+        if (selectedPkg) {
+            priceStr = selectedPkg.getAttribute('data-price') || '';
+            durationStr = selectedPkg.getAttribute('data-duration') || '';
+            pkgName = selectedPkg.value || '';
+        } else {
+            // Спробуємо взяти з hidden inputs (для предзаповненого пакета)
+            const hiddenPrice = document.querySelector('input[name="package_price"]');
+            const hiddenDuration = document.querySelector('input[name="package_duration"]');
+            const hiddenName = document.querySelector('input[name="package"]');
+            if (hiddenPrice) priceStr = hiddenPrice.value;
+            if (hiddenDuration) durationStr = hiddenDuration.value;
+            if (hiddenName) pkgName = hiddenName.value;
+        }
 
         if (!pkgName) {
             if (discountSummary) discountSummary.style.display = 'none';
@@ -294,29 +385,69 @@ if (bookingForm) {
     if (packageSelect) packageSelect.addEventListener('change', updateDiscount);
     if (isRegularCheckbox) isRegularCheckbox.addEventListener('change', updateDiscount);
 
+    // Ініціалізація при завантаженні:
+    // Якщо pre_cat предзаповнена — updateDiscount вже може запуститись
+    // (participants вже заповнені через PHP, package select/hidden теж на місці)
+    if (PRE_CAT) {
+        updateDiscount();
+    }
+
     // === Submit ===
     bookingForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const formData = new FormData(bookingForm);
+
+        // Валідація: якщо selected "Інше" — повинно бути заповнене
+        let participantsValue = (formData.get('participants') || '').trim();
+        const participantsOther = (formData.get('participants_other') || '').trim();
+        if (participantsValue === '__other__') {
+            if (!participantsOther) {
+                alert('Введіть кількість учасників у полі «Інше».');
+                if (participantsOtherInput) participantsOtherInput.focus();
+                return;
+            }
+            participantsValue = participantsOther;
+        }
+
+        // Валідація контактів
+        const contactMethod = (formData.get('contact_method') || 'phone').trim();
+        const contactValue = (formData.get('contact_value') || '').trim();
+        const cfg = contactConfig[contactMethod] || contactConfig.phone;
+        if (cfg.pattern) {
+            const re = new RegExp(cfg.pattern);
+            if (!re.test(contactValue)) {
+                alert(cfg.validationMsg);
+                if (contactValueInput) contactValueInput.focus();
+                return;
+            }
+        }
+
         const payload = {
             name: (formData.get('name') || '').trim(),
             category: (formData.get('category') || '').trim(),
             package: (formData.get('package') || '').trim(),
-            participants: (formData.get('participants') || '').trim(),
+            participants: participantsValue,
             date: (formData.get('date') || '').trim(),
             time: (formData.get('time') || '').trim(),
             is_regular: formData.get('is_regular') === '1',
-            contact_method: formData.get('contact_method') || 'phone',
-            contact_value: (formData.get('contact_value') || '').trim(),
+            contact_method: contactMethod,
+            contact_value: contactValue,
             message: (formData.get('message') || '').trim(),
         };
 
         // Розрахунок знижки
         if (payload.is_regular && payload.package) {
-            let selectedPkg = null;
-            if (packageSelect) selectedPkg = packageSelect.options[packageSelect.selectedIndex];
-            const priceStr = selectedPkg ? selectedPkg.getAttribute('data-price') : '';
+            let priceStr = '';
+            const selectedPkg = packageSelect && !packageSelect.disabled
+                ? packageSelect.options[packageSelect.selectedIndex]
+                : null;
+            if (selectedPkg) {
+                priceStr = selectedPkg.getAttribute('data-price') || '';
+            } else {
+                const hiddenPrice = document.querySelector('input[name="package_price"]');
+                if (hiddenPrice) priceStr = hiddenPrice.value;
+            }
             const price = parsePrice(priceStr);
             const newPrice = Math.round(price * 0.9);
             payload.discount_info = `Постійний клієнт −10%: ${formatPrice(price)} → ${formatPrice(newPrice)}`;

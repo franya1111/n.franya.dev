@@ -2024,3 +2024,13 @@ html.light .discount-summary {
     font-size: 14px;
     margin-top: 8px;
 }
+
+/* ===== PARTICIPANTS OTHER INPUT (visible when "Інше" selected) ===== */
+.participants-other-input {
+    border-color: rgba(201, 169, 110, 0.4) !important;
+    background: rgba(201, 169, 110, 0.05) !important;
+}
+.participants-other-input:focus {
+    border-color: var(--gold) !important;
+    background: rgba(201, 169, 110, 0.08) !important;
+}
